@@ -10,18 +10,18 @@ import {
 	View,
 } from "react-native";
 import backgroundImage from "../../assets/background.jpg";
-import logo from "../../assets/logo-green.png";
+import Header from "../../components/Header/Header";
 
 const window = Dimensions.get("window");
 
 const Signup = () => {
 	return (
 		<ImageBackground source={backgroundImage} style={styles.image}>
+			<Header />
 			<KeyboardAvoidingView
 				style={styles.containerInner}
 				behavior="padding"
 			>
-				<Image source={logo} style={styles.logo} />
 				<TextInput
 					placeholder="Choose a Username"
 					textContentType="username"
@@ -82,7 +82,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		resizeMode: "cover",
 		alignItems: "center",
-		// justifyContent: "flex-start",
 	},
 	containerInner: {
 		marginTop: 120,
@@ -109,6 +108,6 @@ const styles = StyleSheet.create({
 		color: "#fff",
 	},
 	extra: {
-		height: 20,
+		height: 40,
 	},
 });
