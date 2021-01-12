@@ -10,6 +10,7 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
+import { Link } from "react-router-native";
 import backgroundImage from "../../assets/background.jpg";
 import logo from "../../assets/logo-green.png";
 
@@ -29,9 +30,9 @@ const Login = () => {
 				<TouchableOpacity style={styles.button}>
 					<Text style={styles.buttonText}>Login</Text>
 				</TouchableOpacity>
-				<View style={[styles.button, styles.buttonSignup]}>
+				<Link to="/signup" style={[styles.button, styles.buttonSignup]}>
 					<Text style={styles.buttonText}>Sign Up</Text>
-				</View>
+				</Link>
 				<View style={styles.extra}></View>
 			</KeyboardAvoidingView>
 		</ImageBackground>
