@@ -6,6 +6,7 @@ import {
 	StyleSheet,
 	Text,
 	TextInput,
+	TouchableOpacity,
 	View,
 } from "react-native";
 import backgroundImage from "../../assets/background.jpg";
@@ -23,6 +24,91 @@ const Signup = () => {
 	const [emailInUse, setEmailInUse] = useState(false);
 	const [passwordInvalid, setPasswordInvalid] = useState(false);
 	const [passwordsUnmatch, setPasswordsUnmatch] = useState(false);
+	const [username, setUsername] = useState();
+	const [firstName, setFirstName] = useState();
+	const [lastName, setLastName] = useState();
+	const [email, setEmail] = useState();
+	const [password, setPassword] = useState();
+	const [confPassword, setConfPassword] = useState();
+
+	const handleUsername = (_username) => {
+		setUsername(_username.trim());
+	};
+
+	const handleFirstName = (_firstName) => {
+		setFirstName(_firstName.trim());
+	};
+
+	const handleLastName = (_lastName) => {
+		setLastName(_lastName.trim());
+	};
+
+	const handleEmail = (_email) => {
+		setEmail(_email.trim());
+	};
+
+	const handlePassword = (_password) => {
+		setPassword(_password);
+	};
+
+	const handleConfPassword = (_confPassword) => {
+		setConfPassword(_confPassword);
+	};
+
+	const validateForm = () => {
+		const usernameRegex = /^[a-z0-9_-]{3,16}$/i;
+		const nameRegex = /^(?=.{1,50}$)[a-z]+(?:['_.\s][a-z]+)*$/i;
+		const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$/;
+
+		if (username && usernameRegex.test(username)) {
+			setErrorOccurred(false);
+			setUsernameInvalid(false);
+
+			if (firstName && nameRegex.test(firstName)) {
+				setErrorOccurred(false);
+				setFirstNameInvalid(false);
+
+				if (lastName && nameRegex.test(lastName)) {
+					setErrorOccurred(false);
+					setLastNameInvalid(false);
+
+					if (email && emailRegex.test(email)) {
+						setErrorOccurred(false);
+						setEmailInvalid(false);
+
+						if (password && passwordRegex.test(password)) {
+							setErrorOccurred(false);
+							setPasswordInvalid(false);
+
+							if (password === confPassword) {
+								setErrorOccurred(false);
+								setPasswordsUnmatch(false);
+							} else {
+								setErrorOccurred(true);
+								setPasswordsUnmatch(true);
+							}
+						} else {
+							setErrorOccurred(true);
+							setPasswordInvalid(true);
+						}
+					} else {
+						setErrorOccurred(true);
+						setEmailInvalid(true);
+					}
+				} else {
+					setErrorOccurred(true);
+					setLastNameInvalid(true);
+				}
+			} else {
+				setErrorOccurred(true);
+				setFirstNameInvalid(true);
+			}
+		} else {
+			setErrorOccurred(true);
+			setUsernameInvalid(true);
+		}
+	};
 
 	return (
 		<ImageBackground source={backgroundImage} style={styles.image}>
@@ -34,8 +120,9 @@ const Signup = () => {
 				{errorOccurred ? (
 					<View style={styles.errors}>
 						{usernameInvalid ? (
-							<Text style={styles.errorText}>
-								Username is invalid!
+							<Text style={[styles.errorText, { fontSize: 16 }]}>
+								Username must be at least 3 characters and must
+								contain only letters, dashes and underscores!
 							</Text>
 						) : null}
 						{usernameInUse ? (
@@ -64,14 +151,7 @@ const Signup = () => {
 							</Text>
 						) : null}
 						{passwordInvalid ? (
-							<Text
-								style={[
-									styles.errorText,
-									{
-										fontSize: 16,
-									},
-								]}
-							>
+							<Text style={[styles.errorText, { fontSize: 16 }]}>
 								Password must contain at least 8 characters, a
 								number and both lower and uppercase letters and
 								special characters!
@@ -90,6 +170,7 @@ const Signup = () => {
 					autoCompleteType="username"
 					placeholderTextColor="grey"
 					style={styles.input}
+					onChangeText={handleUsername}
 				/>
 				<TextInput
 					placeholder="First Name"
@@ -97,6 +178,7 @@ const Signup = () => {
 					autoCompleteType="name"
 					placeholderTextColor="grey"
 					style={styles.input}
+					onChangeText={handleFirstName}
 				/>
 				<TextInput
 					placeholder="Last Name"
@@ -104,6 +186,7 @@ const Signup = () => {
 					autoCompleteType="name"
 					placeholderTextColor="grey"
 					style={styles.input}
+					onChangeText={handleLastName}
 				/>
 				<TextInput
 					placeholder="Email"
@@ -112,6 +195,7 @@ const Signup = () => {
 					keyboardType="email-address"
 					placeholderTextColor="grey"
 					style={styles.input}
+					onChangeText={handleEmail}
 				/>
 				<TextInput
 					placeholder="Password"
@@ -120,6 +204,7 @@ const Signup = () => {
 					autoCompleteType="password"
 					placeholderTextColor="grey"
 					style={styles.input}
+					onChangeText={handlePassword}
 				/>
 				<TextInput
 					placeholder="Confirm Password"
@@ -128,10 +213,11 @@ const Signup = () => {
 					autoCompleteType="password"
 					placeholderTextColor="grey"
 					style={styles.input}
+					onChangeText={handleConfPassword}
 				/>
-				<View style={styles.button}>
+				<TouchableOpacity style={styles.button} onPress={validateForm}>
 					<Text style={styles.buttonText}>Sign Up</Text>
-				</View>
+				</TouchableOpacity>
 			</KeyboardAvoidingView>
 		</ImageBackground>
 	);
