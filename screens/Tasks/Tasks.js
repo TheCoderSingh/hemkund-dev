@@ -1,14 +1,7 @@
 import React from "react";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import {
-	Dimensions,
-	ScrollView,
-	StyleSheet,
-	Text,
-	TouchableOpacity,
-	View,
-} from "react-native";
+import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Link } from "react-router-native";
 
 const window = Dimensions.get("window");
@@ -18,7 +11,10 @@ const Tasks = (props) => {
 		<View style={{ flex: 1 }}>
 			<ScrollView style={styles.container}>
 				<Header title="Tasks" />
-				<Link to="/new-task" style={styles.button}>
+				<Link
+					to={"/new-task/" + props.match.params.id}
+					style={styles.button}
+				>
 					<Text style={styles.buttonText}>New Task</Text>
 				</Link>
 			</ScrollView>
