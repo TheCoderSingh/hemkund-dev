@@ -16,6 +16,7 @@ export default function App() {
 		<NativeRouter>
 			<View style={styles.container}>
 				<Route path="/new-plan/:id" component={NewPlan} />
+				<Route exact path="/project/:id" component={Project} />
 				<Route exact path="/project/:id/:name" component={Project} />
 				<Route path="/new-project" component={NewProject} />
 				<Route exact path="/projects" component={Projects} />

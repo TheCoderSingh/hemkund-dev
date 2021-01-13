@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
 	Dimensions,
+	ScrollView,
 	StyleSheet,
 	Text,
 	TextInput,
@@ -10,6 +11,7 @@ import {
 import firebase from "firebase/app";
 import { Link } from "react-router-native";
 import Header from "../../components/Header/Header";
+import Plans from "../../components/Plans/Plans";
 
 const window = Dimensions.get("window");
 
@@ -80,7 +82,7 @@ const Project = (props) => {
 	};
 
 	return (
-		<View style={styles.container}>
+		<ScrollView style={styles.container}>
 			<Header
 				showBackLink
 				to="/projects"
@@ -116,7 +118,10 @@ const Project = (props) => {
 					<Text style={styles.addUserTxt}>Add</Text>
 				</TouchableOpacity>
 			</View>
-		</View>
+			<View style={styles.plans}>
+				<Plans projectid={props.match.params.id} />
+			</View>
+		</ScrollView>
 	);
 };
 
@@ -176,5 +181,8 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		fontSize: 18,
 		color: "#fff",
+	},
+	plans: {
+		alignItems: "center",
 	},
 });

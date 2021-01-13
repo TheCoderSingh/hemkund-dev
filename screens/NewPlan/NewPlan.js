@@ -11,7 +11,7 @@ import Icon from "react-native-vector-icons/Entypo";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/storage";
-import { Link } from "react-router-native";
+import { Link, Redirect } from "react-router-native";
 import { getDocumentAsync } from "expo-document-picker";
 
 const window = Dimensions.get("window");
@@ -23,6 +23,7 @@ const NewPlan = (props) => {
 	const [uploadProgress, setUploadProgress] = useState(0);
 	const [blob, setBlob] = useState({});
 	const [ref, setRef] = useState();
+	const [planCreated, setPlanCreated] = useState(false);
 
 	const mountedRef = useRef(true);
 
@@ -83,9 +84,13 @@ const NewPlan = (props) => {
 			status: "active",
 			file_url: url || "",
 		});
+
+		setPlanCreated(true);
 	};
 
-	return (
+	return planCreated ? (
+		<Redirect to={"/project/" + props.match.params.id} />
+	) : (
 		<View style={styles.container}>
 			<Link to={"/project" + props.match.params.id} style={styles.icon}>
 				<Icon name="cross" size={45} color="#fff" />
