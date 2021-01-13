@@ -9,6 +9,9 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/database";
 import backgroundImage from "../../assets/background.jpg";
 import Header from "../../components/Header/Header";
 
@@ -65,49 +68,104 @@ const Signup = () => {
 			setErrorOccurred(false);
 			setUsernameInvalid(false);
 
-			if (firstName && nameRegex.test(firstName)) {
-				setErrorOccurred(false);
-				setFirstNameInvalid(false);
-
-				if (lastName && nameRegex.test(lastName)) {
+			usernameExists().then((exists) => {
+				if (!exists) {
 					setErrorOccurred(false);
-					setLastNameInvalid(false);
+					setUsernameInUse(false);
 
-					if (email && emailRegex.test(email)) {
+					if (firstName && nameRegex.test(firstName)) {
 						setErrorOccurred(false);
-						setEmailInvalid(false);
+						setFirstNameInvalid(false);
 
-						if (password && passwordRegex.test(password)) {
+						if (lastName && nameRegex.test(lastName)) {
 							setErrorOccurred(false);
-							setPasswordInvalid(false);
+							setLastNameInvalid(false);
 
-							if (password === confPassword) {
+							if (email && emailRegex.test(email)) {
 								setErrorOccurred(false);
-								setPasswordsUnmatch(false);
+								setEmailInvalid(false);
+
+								if (password && passwordRegex.test(password)) {
+									setErrorOccurred(false);
+									setPasswordInvalid(false);
+
+									if (password === confPassword) {
+										setErrorOccurred(false);
+										setPasswordsUnmatch(false);
+
+										registerUser();
+									} else {
+										setErrorOccurred(true);
+										setPasswordsUnmatch(true);
+									}
+								} else {
+									setErrorOccurred(true);
+									setPasswordInvalid(true);
+								}
 							} else {
 								setErrorOccurred(true);
-								setPasswordsUnmatch(true);
+								setEmailInvalid(true);
 							}
 						} else {
 							setErrorOccurred(true);
-							setPasswordInvalid(true);
+							setLastNameInvalid(true);
 						}
 					} else {
 						setErrorOccurred(true);
-						setEmailInvalid(true);
+						setFirstNameInvalid(true);
 					}
 				} else {
 					setErrorOccurred(true);
-					setLastNameInvalid(true);
+					setUsernameInUse(true);
 				}
-			} else {
-				setErrorOccurred(true);
-				setFirstNameInvalid(true);
-			}
+			});
 		} else {
 			setErrorOccurred(true);
 			setUsernameInvalid(true);
 		}
+	};
+
+	const usernameExists = async () => {
+		let exists = false;
+		let usersRef = firebase.database().ref().child("users");
+
+		await usersRef
+			.orderByChild("username")
+			.equalTo(username)
+			.once("value", (snapshot) => {
+				if (snapshot.exists()) exists = true;
+				else exists = false;
+			});
+
+		return exists;
+	};
+
+	const registerUser = () => {
+		firebase
+			.auth()
+			.createUserWithEmailAndPassword(email, password)
+			.then((user) => {
+				createUser(user);
+			})
+			.catch((error) => {
+				if (error.code === "auth/email-already-in-use")
+					setEmailInUse(true);
+			});
+	};
+
+	const createUser = (user) => {
+		let usersRef = firebase.database().ref().child("users");
+		let newUserRef = usersRef.push();
+
+		newUserRef.set({
+			uid: user.user.uid,
+			username: username,
+			first_name: firstName,
+			last_name: lastName,
+			email: email,
+			status: "active",
+			registered_on: new Date().toLocaleString(),
+		});
 	};
 
 	return (

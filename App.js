@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { NativeRouter, Route } from "react-router-native";
 import Login from "./screens/Login/Login";
 import Signup from "./screens/Signup/Signup";
+import "./utils/firebaseConfig";
 
 export default function App() {
 	return (
