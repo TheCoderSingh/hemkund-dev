@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { NativeRouter, Route } from "react-router-native";
 import Logout from "./components/Logout/Logout";
 import Login from "./screens/Login/Login";
+import NewPlan from "./screens/NewPlan/NewPlan";
 import NewProject from "./screens/NewProject/NewProject";
 import Project from "./screens/Projects/Project";
 import Projects from "./screens/Projects/Projects";
@@ -14,6 +15,7 @@ export default function App() {
 	return (
 		<NativeRouter>
 			<View style={styles.container}>
+				<Route path="/new-plan/:id" component={NewPlan} />
 				<Route exact path="/project/:id/:name" component={Project} />
 				<Route path="/new-project" component={NewProject} />
 				<Route exact path="/projects" component={Projects} />
