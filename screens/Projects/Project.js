@@ -12,6 +12,7 @@ import firebase from "firebase/app";
 import { Link } from "react-router-native";
 import Header from "../../components/Header/Header";
 import Plans from "../../components/Plans/Plans";
+import Footer from "../../components/Footer/Footer";
 
 const window = Dimensions.get("window");
 
@@ -82,46 +83,49 @@ const Project = (props) => {
 	};
 
 	return (
-		<ScrollView style={styles.container}>
-			<Header
-				showBackLink
-				to="/projects"
-				showLogoutIcon
-				title={props.match.params.name}
-			/>
-			<Link
-				to={"/new-plan/" + props.match.params.id}
-				style={styles.newPlanBtn}
-			>
-				<Text style={styles.newPlanText}>New Plan</Text>
-			</Link>
-			{usernameInvalid ? (
-				<View style={styles.errors}>
-					<Text style={[styles.errorText, { fontSize: 16 }]}>
-						Username is invalid!
-					</Text>
-				</View>
-			) : null}
-			<View style={styles.addUserArea}>
-				<TextInput
-					placeholder="Enter username to add people"
-					textContentType="username"
-					autoCompleteType="username"
-					placeholderTextColor="#fff"
-					onChangeText={handleUsername}
-					style={styles.input}
+		<View style={{ flex: 1 }}>
+			<ScrollView style={styles.container}>
+				<Header
+					showBackLink
+					to="/projects"
+					showLogoutIcon
+					title={props.match.params.name}
 				/>
-				<TouchableOpacity
-					style={styles.addUserBtn}
-					onPress={addUserToProject}
+				<Link
+					to={"/new-plan/" + props.match.params.id}
+					style={styles.newPlanBtn}
 				>
-					<Text style={styles.addUserTxt}>Add</Text>
-				</TouchableOpacity>
-			</View>
-			<View style={styles.plans}>
-				<Plans projectid={props.match.params.id} />
-			</View>
-		</ScrollView>
+					<Text style={styles.newPlanText}>New Plan</Text>
+				</Link>
+				{usernameInvalid ? (
+					<View style={styles.errors}>
+						<Text style={[styles.errorText, { fontSize: 16 }]}>
+							Username is invalid!
+						</Text>
+					</View>
+				) : null}
+				<View style={styles.addUserArea}>
+					<TextInput
+						placeholder="Enter username to add people"
+						textContentType="username"
+						autoCompleteType="username"
+						placeholderTextColor="#fff"
+						onChangeText={handleUsername}
+						style={styles.input}
+					/>
+					<TouchableOpacity
+						style={styles.addUserBtn}
+						onPress={addUserToProject}
+					>
+						<Text style={styles.addUserTxt}>Add</Text>
+					</TouchableOpacity>
+				</View>
+				<View style={styles.plans}>
+					<Plans projectid={props.match.params.id} />
+				</View>
+			</ScrollView>
+			<Footer projectid={props.match.params.id} />
+		</View>
 	);
 };
 
