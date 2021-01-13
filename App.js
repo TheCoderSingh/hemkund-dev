@@ -5,6 +5,7 @@ import { NativeRouter, Route } from "react-router-native";
 import Logout from "./components/Logout/Logout";
 import Login from "./screens/Login/Login";
 import NewProject from "./screens/NewProject/NewProject";
+import Project from "./screens/Projects/Project";
 import Projects from "./screens/Projects/Projects";
 import Signup from "./screens/Signup/Signup";
 import "./utils/firebaseConfig";
@@ -13,6 +14,7 @@ export default function App() {
 	return (
 		<NativeRouter>
 			<View style={styles.container}>
+				<Route exact path="/project/:id/:name" component={Project} />
 				<Route path="/new-project" component={NewProject} />
 				<Route exact path="/projects" component={Projects} />
 				<Route path="/logout" component={Logout} />

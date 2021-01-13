@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
 	Dimensions,
 	StyleSheet,
@@ -7,13 +7,22 @@ import {
 	View,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { Redirect } from "react-router-native";
 
 const window = Dimensions.get("window");
 
 const ProjectCard = (props) => {
-	console.log(props);
-	return (
-		<TouchableOpacity style={styles.project}>
+	const [projectSelected, setProjectSelected] = useState(false);
+
+	return projectSelected ? (
+		<Redirect to={"/project/" + props.id + "/" + props.name} />
+	) : (
+		<TouchableOpacity
+			style={styles.project}
+			onPress={() => {
+				setProjectSelected(true);
+			}}
+		>
 			<Text style={styles.projectTitle}>{props.name}</Text>
 			<Icon name="trash-alt" size={20} color="#fff" style={styles.icon} />
 			<Text style={styles.date}>Created on {props.date}</Text>

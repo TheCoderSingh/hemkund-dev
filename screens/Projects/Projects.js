@@ -58,6 +58,7 @@ const Projects = () => {
 					return (
 						<ProjectCard
 							key={project.project_id}
+							id={project.project_id}
 							name={project.project_name}
 							date={project.created_on}
 						/>
