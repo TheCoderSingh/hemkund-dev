@@ -10,12 +10,13 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 
 const window = Dimensions.get("window");
 
-const ProjectCard = () => {
+const ProjectCard = (props) => {
+	console.log(props);
 	return (
 		<TouchableOpacity style={styles.project}>
-			<Text style={styles.projectTitle}>Name</Text>
+			<Text style={styles.projectTitle}>{props.name}</Text>
 			<Icon name="trash-alt" size={20} color="#fff" style={styles.icon} />
-			<Text style={styles.date}>Created on 2021</Text>
+			<Text style={styles.date}>Created on {props.date}</Text>
 		</TouchableOpacity>
 	);
 };
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		borderRadius: 6,
 		marginVertical: 20,
-		paddingVertical: 15,
+		paddingTop: 15,
 	},
 	projectTitle: {
 		fontSize: 20,
@@ -39,5 +40,8 @@ const styles = StyleSheet.create({
 		right: 15,
 		top: "50%",
 	},
-	date: {},
+	date: {
+		paddingVertical: 10,
+		color: "#ccc",
+	},
 });
