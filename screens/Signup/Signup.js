@@ -170,7 +170,7 @@ const Signup = () => {
 
 	return (
 		<ImageBackground source={backgroundImage} style={styles.image}>
-			<Header />
+			<Header title="Signup" to="/" showBackLink />
 			<KeyboardAvoidingView
 				style={styles.containerInner}
 				behavior="padding"

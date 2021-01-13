@@ -3,13 +3,17 @@ import { StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Link } from "react-router-native";
 
-const Header = () => {
+const Header = (props) => {
 	return (
 		<View style={styles.container}>
-			<Link to="/" style={styles.backLink}>
-				<Icon name="chevron-back-outline" color="#fff" size={30} />
-			</Link>
-			<Text style={styles.loginTxt}>Login</Text>
+			{props.showBackLink ? (
+				<Link to={props.to} style={styles.backLink}>
+					<Icon name="chevron-back-outline" color="#fff" size={30} />
+				</Link>
+			) : (
+				<View style={{ width: 30 }}></View>
+			)}
+			<Text style={styles.loginTxt}>{props.title}</Text>
 			<View />
 		</View>
 	);
