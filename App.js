@@ -15,7 +15,7 @@ export default function App() {
 				<Route path="/new-project" component={NewProject} />
 				<Route exact path="/projects" component={Projects} />
 				<Route path="/signup" component={Signup} />
-				<Route exact path="/" component={Projects} />
+				<Route exact path="/" component={Login} />
 				<StatusBar style="auto" />
 			</View>
 		</NativeRouter>
