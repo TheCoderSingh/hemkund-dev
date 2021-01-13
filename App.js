@@ -9,12 +9,14 @@ import NewProject from "./screens/NewProject/NewProject";
 import Project from "./screens/Projects/Project";
 import Projects from "./screens/Projects/Projects";
 import Signup from "./screens/Signup/Signup";
+import Tasks from "./screens/Tasks/Tasks";
 import "./utils/firebaseConfig";
 
 export default function App() {
 	return (
 		<NativeRouter>
 			<View style={styles.container}>
+				<Route path="/tasks/:id" component={Tasks} />
 				<Route path="/new-plan/:id" component={NewPlan} />
 				<Route exact path="/project/:id" component={Project} />
 				<Route exact path="/project/:id/:name" component={Project} />
