@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
+import Ionicon from "react-native-vector-icons/Ionicons";
+import MatIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Link } from "react-router-native";
 
 const Header = (props) => {
@@ -8,13 +9,23 @@ const Header = (props) => {
 		<View style={styles.container}>
 			{props.showBackLink ? (
 				<Link to={props.to} style={styles.backLink}>
-					<Icon name="chevron-back-outline" color="#fff" size={30} />
+					<Ionicon
+						name="chevron-back-outline"
+						color="#fff"
+						size={30}
+					/>
 				</Link>
 			) : (
-				<View style={{ width: 30 }}></View>
+				<View style={{ width: 80 }}></View>
 			)}
 			<Text style={styles.loginTxt}>{props.title}</Text>
-			<View />
+			{props.showLogoutIcon ? (
+				<Link to="/logout" style={styles.logout}>
+					<MatIcon name="logout" color="#fff" size={30} />
+				</Link>
+			) : (
+				<View />
+			)}
 		</View>
 	);
 };
@@ -39,5 +50,8 @@ const styles = StyleSheet.create({
 		marginRight: 44,
 		textAlign: "center",
 		fontSize: 20,
+	},
+	logout: {
+		paddingRight: 10,
 	},
 });

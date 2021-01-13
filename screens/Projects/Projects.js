@@ -9,7 +9,7 @@ const window = Dimensions.get("window");
 const Projects = () => {
 	return (
 		<ScrollView style={styles.container}>
-			<Header title="Projects" showBackLink={false} />
+			<Header title="Projects" showLogoutIcon />
 			<Link to="/new-project" style={styles.button}>
 				<Text style={styles.buttonText}>New Project</Text>
 			</Link>
