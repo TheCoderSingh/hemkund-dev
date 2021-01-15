@@ -14,6 +14,7 @@ import "firebase/auth";
 import "firebase/database";
 import backgroundImage from "../../assets/background.jpg";
 import Header from "../../components/Header/Header";
+import { Redirect } from "react-router-native";
 
 const window = Dimensions.get("window");
 
@@ -33,6 +34,7 @@ const Signup = () => {
 	const [email, setEmail] = useState();
 	const [password, setPassword] = useState();
 	const [confPassword, setConfPassword] = useState();
+	const [signedUp, setSignedUp] = useState(false);
 
 	const handleUsername = (_username) => {
 		setUsername(_username.trim());
@@ -166,9 +168,13 @@ const Signup = () => {
 			status: "active",
 			registered_on: new Date().toLocaleString(),
 		});
+
+		setSignedUp(true);
 	};
 
-	return (
+	return signedUp ? (
+		<Redirect to="/projects" />
+	) : (
 		<ImageBackground source={backgroundImage} style={styles.image}>
 			<Header title="Signup" to="/" showBackLink />
 			<KeyboardAvoidingView
