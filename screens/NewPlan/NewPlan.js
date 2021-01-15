@@ -24,6 +24,8 @@ const NewPlan = (props) => {
 	const [blob, setBlob] = useState({});
 	const [ref, setRef] = useState();
 	const [planCreated, setPlanCreated] = useState(false);
+	const [fileName, setFileName] = useState();
+	const [uploaded, setUploaded] = useState(false);
 
 	const mountedRef = useRef(true);
 
@@ -115,28 +117,59 @@ const NewPlan = (props) => {
 					placeholderTextColor="grey"
 					onChangeText={handlePlanName}
 				/>
+				{uploaded ? (
+					<Text
+						style={{
+							color: "#fff",
+							marginTop: 20,
+							alignSelf: "center",
+						}}
+					>
+						{fileName}
+					</Text>
+				) : (
+					<Text
+						style={{
+							color: "#fff",
+							marginTop: 20,
+							alignSelf: "center",
+						}}
+					>
+						No file uploaded
+					</Text>
+				)}
 				<TouchableOpacity
-					style={styles.button}
+					style={[
+						styles.button,
+						{ backgroundColor: "#ddd", alignItems: "center" },
+					]}
 					onPress={() => {
 						getDocumentAsync().then(async (response) => {
 							try {
 								let storageRef = firebase.storage().ref();
-								setRef(
-									storageRef.child(
-										response.uri.split("/")[14]
-									)
-								);
+								if (response.uri) {
+									setRef(
+										storageRef.child(
+											response.uri.split("/")[14]
+										)
+									);
 
-								let fetchResponse = await fetch(response.uri);
-								let blob = await fetchResponse.blob();
+									let fetchResponse = await fetch(
+										response.uri
+									);
+									let blob = await fetchResponse.blob();
 
-								if (mountedRef.current) setBlob(blob);
+									if (mountedRef.current) setBlob(blob);
+									setFileName(response.name);
+									setUploaded(true);
+								}
 							} catch (error) {
 								console.log(error);
 							}
 						});
 					}}
 				>
+					<Icon name="upload" size={25} color="#333" />
 					<Text style={styles.buttonText}>Upload Plan</Text>
 				</TouchableOpacity>
 				<TouchableOpacity style={styles.button} onPress={createPlan}>

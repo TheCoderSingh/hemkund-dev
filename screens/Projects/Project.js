@@ -84,13 +84,12 @@ const Project = (props) => {
 
 	return (
 		<View style={{ flex: 1 }}>
+			<Header
+				showBackLink
+				to="/projects"
+				title={props.match.params.name}
+			/>
 			<ScrollView style={styles.container}>
-				<Header
-					showBackLink
-					to="/projects"
-					showLogoutIcon
-					title={props.match.params.name}
-				/>
 				<Link
 					to={"/new-plan/" + props.match.params.id}
 					style={styles.newPlanBtn}
@@ -109,7 +108,7 @@ const Project = (props) => {
 						placeholder="Enter username to add people"
 						textContentType="username"
 						autoCompleteType="username"
-						placeholderTextColor="#fff"
+						placeholderTextColor="#333"
 						onChangeText={handleUsername}
 						style={styles.input}
 					/>
@@ -153,10 +152,12 @@ const styles = StyleSheet.create({
 	input: {
 		height: 50,
 		width: window.width - 110,
-		backgroundColor: "#03989E",
+		// backgroundColor: "#03989E",
 		marginVertical: 5,
 		paddingLeft: 20,
 		alignSelf: "center",
+		borderColor: "#03989E",
+		borderWidth: 1,
 	},
 	addUserArea: {
 		flexDirection: "row",
