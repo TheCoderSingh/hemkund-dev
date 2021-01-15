@@ -55,14 +55,16 @@ const Projects = () => {
 			</Link>
 			<View style={styles.projects}>
 				{projects.map((project) => {
-					return (
-						<ProjectCard
-							key={project.project_id}
-							id={project.project_id}
-							name={project.project_name}
-							date={project.created_on}
-						/>
-					);
+					if (project.status === "active") {
+						return (
+							<ProjectCard
+								key={project.project_id}
+								id={project.project_id}
+								name={project.project_name}
+								date={project.created_on}
+							/>
+						);
+					}
 				})}
 			</View>
 		</ScrollView>

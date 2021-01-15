@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+	Alert,
 	Dimensions,
 	StyleSheet,
 	Text,
@@ -7,47 +8,92 @@ import {
 	View,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import firebase from "firebase/app";
 import { Redirect } from "react-router-native";
 
 const window = Dimensions.get("window");
 
 const ProjectCard = (props) => {
 	const [projectSelected, setProjectSelected] = useState(false);
+	const [removed, setRemoved] = useState(false);
+
+	const showDeleteAlert = () => {
+		Alert.alert(
+			"Delete Project",
+			"Are you sure you want to delete this project?",
+			[
+				{
+					text: "No",
+					style: "cancel",
+				},
+				{
+					text: "Yes",
+					onPress: () => {
+						let projectRef = firebase
+							.database()
+							.ref()
+							.child("projects");
+
+						projectRef
+							.child(props.id)
+							.update({ status: "deleted" });
+
+						setRemoved(true);
+					},
+				},
+			],
+			{ cancelable: true }
+		);
+	};
 
 	return projectSelected ? (
 		<Redirect to={"/project/" + props.id + "/" + props.name} />
 	) : (
-		<TouchableOpacity
-			style={styles.project}
-			onPress={() => {
-				setProjectSelected(true);
-			}}
-		>
-			<Text style={styles.projectTitle}>{props.name}</Text>
-			<Icon name="trash-alt" size={20} color="#fff" style={styles.icon} />
-			<Text style={styles.date}>Created on {props.date}</Text>
-		</TouchableOpacity>
+		<View style={styles.container}>
+			<TouchableOpacity
+				style={styles.project}
+				onPress={() => {
+					setProjectSelected(true);
+				}}
+			>
+				<Text style={styles.projectTitle}>{props.name}</Text>
+				<Text style={styles.date}>Created on {props.date}</Text>
+			</TouchableOpacity>
+			<TouchableOpacity onPress={showDeleteAlert} style={styles.iconCont}>
+				<Icon
+					name="trash-alt"
+					size={20}
+					color="#fff"
+					style={styles.icon}
+				/>
+			</TouchableOpacity>
+		</View>
 	);
 };
 
 export default ProjectCard;
 
 const styles = StyleSheet.create({
+	container: {
+		flexDirection: "row",
+		alignItems: "center",
+	},
 	project: {
 		backgroundColor: "#03989E",
-		width: window.width - 60,
+		width: window.width - 105,
 		alignItems: "center",
-		borderRadius: 6,
 		marginVertical: 20,
 		paddingTop: 15,
 	},
 	projectTitle: {
 		fontSize: 20,
 	},
-	icon: {
-		position: "absolute",
-		right: 15,
-		top: "50%",
+	iconCont: {
+		backgroundColor: "#333",
+		height: 75,
+		justifyContent: "center",
+		alignItems: "center",
+		width: 45,
 	},
 	date: {
 		paddingVertical: 10,
