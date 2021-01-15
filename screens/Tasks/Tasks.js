@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import firebase from "firebase/app";
@@ -12,13 +12,18 @@ import {
 } from "react-native";
 import { Link } from "react-router-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import FIcon from "react-native-vector-icons/FontAwesome5";
 
 const window = Dimensions.get("window");
 
 const Tasks = (props) => {
 	const [tasks, setTasks] = useState([]);
+	const [taskChanged, setTaskChanged] = useState(false);
+
+	const mountedRef = useRef(true);
 
 	useEffect(() => {
+		setTasks([]);
 		let tasksRef = firebase.database().ref("tasks");
 
 		tasksRef
@@ -28,14 +33,27 @@ const Tasks = (props) => {
 				"value",
 				(snapshot) => {
 					snapshot.forEach((task) => {
-						setTasks((tasks) => [...tasks, task.val()]);
+						if (mountedRef.current)
+							setTasks((tasks) => [...tasks, task.val()]);
 					});
 				},
 				(error) => {
 					console.log("Error: " + error.code);
 				}
 			);
-	}, []);
+
+		return () => {
+			mountedRef.current = false;
+		};
+	}, [taskChanged]);
+
+	const toggleCheckbox = (taskid, isComplete) => {
+		let tasksRef = firebase.database().ref().child("tasks");
+
+		tasksRef.child(taskid).update({ complete: isComplete });
+
+		setTaskChanged(!taskChanged);
+	};
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -51,12 +69,26 @@ const Tasks = (props) => {
 					{tasks.map((task, index) => {
 						return task.complete ? (
 							<View style={styles.task} key={index}>
-								<TouchableOpacity style={styles.checkbox}>
-									<Icon
-										source={check}
-										style={styles.checkmark}
-									/>
-								</TouchableOpacity>
+								<View style={styles.checkArea}>
+									<TouchableOpacity
+										style={styles.checkbox}
+										onPress={() => {
+											toggleCheckbox(
+												task.task_id,
+												!task.complete
+											);
+
+											task.complete = !task.complete;
+										}}
+									>
+										<FIcon
+											name="check"
+											color="#03989E"
+											size={30}
+											style={styles.ficon}
+										/>
+									</TouchableOpacity>
+								</View>
 								<View style={styles.cardContent}>
 									<Text style={styles.taskTxtCpltd}>
 										{task.task_name}
@@ -66,12 +98,26 @@ const Tasks = (props) => {
 										{task.due_time}
 									</Text>
 								</View>
+								<Icon
+									name="trash"
+									size={20}
+									color="#333"
+									style={styles.icon}
+								/>
 							</View>
 						) : (
 							<View style={styles.task} key={index}>
 								<TouchableOpacity
 									style={styles.checkbox}
-								></TouchableOpacity>
+									onPress={() => {
+										toggleCheckbox(
+											task.task_id,
+											!task.complete
+										);
+
+										task.complete = !task.complete;
+									}}
+								/>
 								<View style={styles.cardContent}>
 									<Text style={styles.taskTxt}>
 										{task.task_name}
@@ -142,7 +188,13 @@ const styles = StyleSheet.create({
 		marginRight: 10,
 	},
 	icon: {
-		marginLeft: 45,
+		marginLeft: 30,
 		alignSelf: "center",
+	},
+	checkArea: {
+		position: "relative",
+	},
+	ficon: {
+		position: "absolute",
 	},
 });
