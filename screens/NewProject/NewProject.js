@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
 import firebase from "firebase/app";
-import { Link } from "react-router-native";
+import { Link, Redirect } from "react-router-native";
 
 const window = Dimensions.get("window");
 
@@ -18,6 +18,8 @@ const NewProject = () => {
 	const [projectCode, setProjectCode] = useState();
 	const [projectNameInvalid, setProjectNameInvalid] = useState(false);
 	const [currUserId, setCurrUserId] = useState();
+	const [projectId, setProjectId] = useState();
+	const [projectCreated, setProjectCreated] = useState(false);
 
 	const handleProjectName = (name) => setProjectName(name.trim());
 	const handleProjectCode = (code) => setProjectCode(code.trim());
@@ -60,10 +62,15 @@ const NewProject = () => {
 					project_id: newProjectRef.key,
 				});
 			}
+
+			setProjectId(newProjectRef.key);
+			setProjectCreated(true);
 		} else setProjectNameInvalid(true);
 	};
 
-	return (
+	return projectCreated ? (
+		<Redirect to={"project/" + projectId + "/" + projectName} />
+	) : (
 		<View style={styles.container}>
 			<Link to="/projects" style={styles.icon}>
 				<Icon name="cross" size={45} color="#fff" />
