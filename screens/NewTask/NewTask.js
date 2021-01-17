@@ -10,7 +10,7 @@ import {
 import Icon from "react-native-vector-icons/Entypo";
 import firebase from "firebase/app";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Link } from "react-router-native";
+import { Link, Redirect } from "react-router-native";
 
 const window = Dimensions.get("window");
 
@@ -22,6 +22,7 @@ const NewTask = (props) => {
 	const [time, setTime] = useState(new Date());
 	const [showDate, setShowDate] = useState(false);
 	const [showTime, setShowTime] = useState(false);
+	const [taskCreated, setTaskCreated] = useState(false);
 
 	const handleTaskName = (name) => setTaskName(name.trim());
 
@@ -72,12 +73,16 @@ const NewTask = (props) => {
 				due_date: date.toString().substr(0, 15),
 				due_time: time.toString().substring(16, 24),
 			});
+
+			setTaskCreated(true);
 		} else setTaskNameInvalid(true);
 	};
 
-	return (
+	return taskCreated ? (
+		<Redirect to={"/tasks/" + props.match.params.id} />
+	) : (
 		<View style={styles.container}>
-			<Link to={"/tasks" + props.match.params.id} style={styles.icon}>
+			<Link to={"/tasks/" + props.match.params.id} style={styles.icon}>
 				<Icon name="cross" size={45} color="#fff" />
 			</Link>
 			<View styles={styles.content}>
