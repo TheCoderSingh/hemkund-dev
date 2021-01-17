@@ -100,11 +100,11 @@ const NewTask = (props) => {
 					placeholderTextColor="grey"
 					onChangeText={handleTaskName}
 				/>
-				<TouchableOpacity onPress={showDatePicker}>
+				<TouchableOpacity
+					onPress={showDatePicker}
+					style={styles.dateTimeCont}
+				>
 					<Text>Choose Date</Text>
-				</TouchableOpacity>
-				<TouchableOpacity onPress={showTimePicker}>
-					<Text>Choose Time</Text>
 				</TouchableOpacity>
 				{showDate && (
 					<DateTimePicker
@@ -115,6 +115,12 @@ const NewTask = (props) => {
 						onChange={handleDateChange}
 					/>
 				)}
+				<TouchableOpacity
+					onPress={showTimePicker}
+					style={styles.dateTimeCont}
+				>
+					<Text>Choose Time</Text>
+				</TouchableOpacity>
 				{showTime && (
 					<DateTimePicker
 						testID="dateTimePicker"
@@ -186,5 +192,15 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		fontSize: 18,
 		color: "#fff",
+	},
+	dateTimeCont: {
+		alignSelf: "center",
+		marginTop: 20,
+		height: 50,
+		width: window.width - 60,
+		backgroundColor: "#fff",
+		paddingLeft: 20,
+		borderRadius: 6,
+		justifyContent: "center",
 	},
 });
