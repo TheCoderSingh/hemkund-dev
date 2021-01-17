@@ -3,6 +3,7 @@ import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import firebase from "firebase/app";
 import {
+	Alert,
 	Dimensions,
 	ScrollView,
 	StyleSheet,
@@ -19,11 +20,56 @@ const window = Dimensions.get("window");
 const Tasks = (props) => {
 	const [tasks, setTasks] = useState([]);
 	const [taskChanged, setTaskChanged] = useState(false);
+	const [removed, setRemoved] = useState(false);
 
 	const mountedRef = useRef(true);
 
 	useEffect(() => {
-		if (mountedRef.current) setTasks([]);
+		getTasks();
+
+		return () => {
+			mountedRef.current = false;
+		};
+	}, []);
+
+	const toggleCheckbox = (taskid, isComplete) => {
+		let tasksRef = firebase.database().ref().child("tasks");
+
+		tasksRef.child(taskid).update({ complete: isComplete });
+
+		getTasks();
+
+		setTaskChanged(!taskChanged);
+	};
+
+	const showDeleteAlert = (taskid) => {
+		Alert.alert(
+			"Delete Project",
+			"Are you sure you want to delete this task?",
+			[
+				{
+					text: "No",
+					style: "cancel",
+				},
+				{
+					text: "Yes",
+					onPress: () => {
+						let taskRef = firebase.database().ref().child("tasks");
+
+						taskRef.child(taskid).update({ status: "deleted" });
+
+						getTasks();
+
+						setRemoved(true);
+					},
+				},
+			],
+			{ cancelable: true }
+		);
+	};
+
+	const getTasks = () => {
+		setTasks([]);
 		let tasksRef = firebase.database().ref("tasks");
 
 		tasksRef
@@ -41,24 +87,16 @@ const Tasks = (props) => {
 					console.log("Error: " + error.code);
 				}
 			);
-
-		return () => {
-			mountedRef.current = false;
-		};
-	}, [taskChanged]);
-
-	const toggleCheckbox = (taskid, isComplete) => {
-		let tasksRef = firebase.database().ref().child("tasks");
-
-		tasksRef.child(taskid).update({ complete: isComplete });
-
-		setTaskChanged(!taskChanged);
 	};
 
 	return (
 		<View style={{ flex: 1 }}>
 			<ScrollView style={styles.container}>
-				<Header title="Tasks" />
+				<Header
+					title="Tasks"
+					showBackLink
+					to={"/project/" + props.match.params.id}
+				/>
 				<Link
 					to={"/new-task/" + props.match.params.id}
 					style={styles.button}
@@ -67,9 +105,53 @@ const Tasks = (props) => {
 				</Link>
 				<View style={styles.tasks}>
 					{tasks.map((task, index) => {
-						return task.complete ? (
-							<View style={styles.task} key={index}>
-								<View style={styles.checkArea}>
+						if (task.status === "active") {
+							return task.complete ? (
+								<View style={styles.task} key={index}>
+									<View style={styles.checkArea}>
+										<TouchableOpacity
+											style={styles.checkbox}
+											onPress={() => {
+												toggleCheckbox(
+													task.task_id,
+													!task.complete
+												);
+
+												task.complete = !task.complete;
+											}}
+										>
+											<Icon
+												name="check"
+												color="#03989E"
+												size={30}
+												style={styles.ficon}
+											/>
+										</TouchableOpacity>
+									</View>
+									<View style={styles.cardContent}>
+										<Text style={styles.taskTxtCpltd}>
+											{task.task_name}
+										</Text>
+										<Text>
+											Due by: {task.due_date} -{" "}
+											{task.due_time}
+										</Text>
+									</View>
+									<TouchableOpacity
+										onPress={() => {
+											showDeleteAlert(task.task_id);
+										}}
+										style={styles.iconCont}
+									>
+										<FIcon
+											name="trash-alt"
+											size={20}
+											color="#fff"
+										/>
+									</TouchableOpacity>
+								</View>
+							) : (
+								<View style={styles.task} key={index}>
 									<TouchableOpacity
 										style={styles.checkbox}
 										onPress={() => {
@@ -80,61 +162,31 @@ const Tasks = (props) => {
 
 											task.complete = !task.complete;
 										}}
+									/>
+									<View style={styles.cardContent}>
+										<Text style={styles.taskTxt}>
+											{task.task_name}
+										</Text>
+										<Text>
+											Due by: {task.due_date} -{" "}
+											{task.due_time}
+										</Text>
+									</View>
+									<TouchableOpacity
+										onPress={() => {
+											showDeleteAlert(task.task_id);
+										}}
+										style={styles.iconCont}
 									>
 										<FIcon
-											name="check"
-											color="#03989E"
-											size={30}
-											style={styles.ficon}
+											name="trash-alt"
+											size={20}
+											color="#fff"
 										/>
 									</TouchableOpacity>
 								</View>
-								<View style={styles.cardContent}>
-									<Text style={styles.taskTxtCpltd}>
-										{task.task_name}
-									</Text>
-									<Text>
-										Due by: {task.due_date} -{" "}
-										{task.due_time}
-									</Text>
-								</View>
-								<Icon
-									name="trash"
-									size={20}
-									color="#333"
-									style={styles.icon}
-								/>
-							</View>
-						) : (
-							<View style={styles.task} key={index}>
-								<TouchableOpacity
-									style={styles.checkbox}
-									onPress={() => {
-										toggleCheckbox(
-											task.task_id,
-											!task.complete
-										);
-
-										task.complete = !task.complete;
-									}}
-								/>
-								<View style={styles.cardContent}>
-									<Text style={styles.taskTxt}>
-										{task.task_name}
-									</Text>
-									<Text>
-										Due by: {task.due_date} -{" "}
-										{task.due_time}
-									</Text>
-								</View>
-								<Icon
-									name="trash"
-									size={20}
-									color="#333"
-									style={styles.icon}
-								/>
-							</View>
-						);
+							);
+						}
 					})}
 				</View>
 			</ScrollView>
@@ -168,15 +220,13 @@ const styles = StyleSheet.create({
 	},
 	task: {
 		marginBottom: 15,
-		paddingBottom: 10,
-		display: "flex",
 		flexDirection: "row",
 		backgroundColor: "#eee",
-		padding: 10,
+		paddingLeft: 10,
 		height: 80,
-		borderRadius: 6,
 		width: window.width - 60,
 		alignItems: "center",
+		justifyContent: "space-between",
 	},
 	checkbox: {
 		height: 25,
@@ -187,9 +237,12 @@ const styles = StyleSheet.create({
 		alignSelf: "center",
 		marginRight: 10,
 	},
-	icon: {
-		marginLeft: 30,
-		alignSelf: "center",
+	iconCont: {
+		backgroundColor: "#333",
+		height: 75,
+		justifyContent: "center",
+		alignItems: "center",
+		width: 50,
 	},
 	checkArea: {
 		position: "relative",

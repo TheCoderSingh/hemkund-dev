@@ -60,12 +60,7 @@ const ProjectCard = (props) => {
 				<Text style={styles.date}>Created on {props.date}</Text>
 			</TouchableOpacity>
 			<TouchableOpacity onPress={showDeleteAlert} style={styles.iconCont}>
-				<Icon
-					name="trash-alt"
-					size={20}
-					color="#fff"
-					style={styles.icon}
-				/>
+				<Icon name="trash-alt" size={20} color="#fff" />
 			</TouchableOpacity>
 		</View>
 	);
