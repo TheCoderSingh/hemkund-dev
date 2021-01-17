@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
 	ScrollView,
 	StyleSheet,
@@ -7,151 +7,250 @@ import {
 	TouchableOpacity,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/Footer";
 import { range } from "lodash";
 
-const renderWeekDays = () => {
-	let weekdays = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+const months = [
+	"January",
+	"February",
+	"March",
+	"April",
+	"May",
+	"June",
+	"July",
+	"August",
+	"September",
+	"October",
+	"November",
+	"December",
+];
 
-	return weekdays.map((day) => {
-		return (
-			<Text key={day} style={styles.calendar_weekdays_text}>
-				{day.toUpperCase()}
-			</Text>
-		);
-	});
-};
+const weekdays = [
+	"Sunday",
+	"Monday",
+	"Tuesday",
+	"Wednesday",
+	"Thursday",
+	"Friday",
+	"Saturday",
+];
 
-const getWeeksArray = (days) => {
-	var weeks_r = [];
-	var seven_days = [];
-	var count = 0;
-	days.forEach((day) => {
-		count += 1;
-		seven_days.push(day);
-		if (count == 7) {
-			weeks_r.push(seven_days);
-			count = 0;
-			seven_days = [];
-		}
-	});
-	return weeks_r;
-};
+const Calendar = (props) => {
+	const [year, setYear] = useState(new Date().getFullYear());
+	const [month, setMonth] = useState(new Date().getMonth());
+	const [selectedDate, setSelectedDate] = useState(new Date().getDate());
+	const [selectedDay, setSelectedDay] = useState(new Date().getDay());
 
-const renderDays = (week_days) => {
-	return week_days.map((day, index) => {
-		return (
-			<TouchableOpacity
-				label={day}
-				key={index}
-				style={styles.day}
-				noDefaultStyles={true}
-			>
-				<Text style={styles.day_text}>{day}</Text>
-			</TouchableOpacity>
-		);
-	});
-};
+	const renderWeekDays = () => {
+		let weekdays = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 
-const renderWeeks = () => {
-	let past_month_days = range(27, 31);
-	let this_month_days = range(1, 30);
+		return weekdays.map((day) => {
+			return (
+				<Text key={day} style={styles.calendar_weekdays_text}>
+					{day.toUpperCase()}
+				</Text>
+			);
+		});
+	};
 
-	let days = past_month_days.concat(past_month_days, this_month_days);
-	let grouped_days = getWeeksArray(days);
+	const getWeeksArray = (days) => {
+		var weeks_r = [];
+		var seven_days = [];
+		var count = 0;
+		days.forEach((day) => {
+			count += 1;
+			seven_days.push(day);
+			if (count == 7) {
+				weeks_r.push(seven_days);
+				count = 0;
+				seven_days = [];
+			}
+		});
+		return weeks_r;
+	};
 
-	return grouped_days.map((week_days, index) => {
-		return (
-			<View key={index} style={styles.week_days}>
-				{renderDays(week_days)}
-			</View>
-		);
-	});
-};
+	const renderDays = (week_days) => {
+		return week_days.map((day, index) => {
+			return day === selectedDate ? (
+				<TouchableOpacity
+					label={day}
+					key={index}
+					style={[
+						styles.day,
+						{
+							borderWidth: 2,
+							borderColor: "#03989E",
+							backgroundColor: "#fff",
+						},
+					]}
+					noDefaultStyles={true}
+					onPress={() => {
+						setSelectedDate(day);
+						setSelectedDay(new Date(year, month, day).getDay());
+					}}
+				>
+					<Text style={styles.day_text}>{day}</Text>
+				</TouchableOpacity>
+			) : (
+				<TouchableOpacity
+					label={day}
+					key={index}
+					style={styles.day}
+					noDefaultStyles={true}
+					onPress={() => {
+						setSelectedDate(day);
+						setSelectedDay(new Date(year, month, day).getDay());
+					}}
+				>
+					<Text style={styles.day_text}>{day}</Text>
+				</TouchableOpacity>
+			);
+		});
+	};
 
-const Calendar = () => {
+	const renderWeeks = () => {
+		let past_month_days = range(27, 31);
+		let this_month_days = range(1, 30);
+
+		let days = past_month_days.concat(past_month_days, this_month_days);
+		let grouped_days = getWeeksArray(days);
+
+		return grouped_days.map((week_days, index) => {
+			return (
+				<View key={index} style={styles.week_days}>
+					{renderDays(week_days)}
+				</View>
+			);
+		});
+	};
+
 	return (
-		<ScrollView
-			style={styles.container}
-			contentContainerStyle={{ alignItems: "center" }}
-		>
-			<View style={styles.header}>
-				<TouchableOpacity style={styles.header_item}>
-					<View style={styles.header_button}>
-						<Icon name="chevron-left" size={30} color="#FFF" />
-						<Text style={[styles.header_text]}> Menu</Text>
-					</View>
-				</TouchableOpacity>
-				<View style={styles.header_item}>
-					<Text
-						style={[
-							styles.header_text,
-							styles.text_center,
-							styles.bold_text,
-						]}
-					>
-						Calendar
-					</Text>
-				</View>
-				<View style={styles.header_item}>
-					<Text style={[styles.header_text, styles.text_right]}>
-						Today
-					</Text>
-				</View>
-			</View>
-			<View>
-				<View style={styles.calendar_header}>
-					<View style={styles.calendar_header_item}>
-						<TouchableOpacity>
-							<Icon name="chevron-left" size={18} color="#333" />
-						</TouchableOpacity>
-						<Text style={styles.calendar_header_text}>2013</Text>
-						<TouchableOpacity>
-							<Icon name="chevron-right" size={18} color="#333" />
-						</TouchableOpacity>
-					</View>
-
-					<View style={styles.calendar_header_item}>
-						<TouchableOpacity>
-							<Icon name="chevron-left" size={18} color="#333" />
-						</TouchableOpacity>
-						<Text style={styles.calendar_header_text}>
-							November
-						</Text>
-						<TouchableOpacity>
-							<Icon name="chevron-right" size={18} color="#333" />
-						</TouchableOpacity>
-					</View>
-				</View>
-				<View style={styles.calendar_weekdays}>{renderWeekDays()}</View>
-				<View style={styles.calendar_days}>{renderWeeks()}</View>
-			</View>
-			<View style={styles.notes}>
-				<View style={styles.notes_notes}>
-					<Text style={styles.notes_text}>
-						Riding my bike around the neighborhood.
-					</Text>
-				</View>
-				<View style={[styles.notes_selected_date]}>
-					<Text style={styles.small_text}>8:23 PM</Text>
-					<Text style={styles.big_text}>14</Text>
-					<View style={styles.inline}>
-						<Icon name="bicycle" size={20} color="#CCC" />
-						<Text style={styles.small_text}> THURSDAY</Text>
-					</View>
-				</View>
-			</View>
-			<View style={styles.logs}>
+		<View style={{ flex: 1 }}>
+			<ScrollView
+				style={styles.container}
+				contentContainerStyle={{ alignItems: "center" }}
+			>
+				<Header
+					to={"/project/" + props.match.params.id}
+					showBackLink
+					title="Calendar"
+				/>
 				<View>
-					<Text style={styles.log_text}>Create New Entry</Text>
-					<Text style={styles.log_subtext}>
-						On Thursday, November 14
-					</Text>
+					<View style={styles.calendar_header}>
+						<View style={styles.calendar_header_item}>
+							<TouchableOpacity
+								onPress={() => {
+									setYear(year - 1);
+								}}
+								style={{ padding: 10 }}
+							>
+								<Icon
+									name="chevron-left"
+									size={18}
+									color="#333"
+								/>
+							</TouchableOpacity>
+							<Text style={styles.calendar_header_text}>
+								{year}
+							</Text>
+							<TouchableOpacity
+								style={{ padding: 10 }}
+								onPress={() => {
+									setYear(year + 1);
+								}}
+							>
+								<Icon
+									name="chevron-right"
+									size={18}
+									color="#333"
+								/>
+							</TouchableOpacity>
+						</View>
+
+						<TouchableOpacity
+							style={styles.calendar_header_item}
+							onPress={() => {
+								let _date = new Date().getDate();
+								let _month = new Date().getMonth();
+								let _year = new Date().getFullYear();
+								setSelectedDate(_date);
+								setSelectedDay(
+									new Date(_year, _month, _date).getDay()
+								);
+
+								setYear(new Date().getFullYear());
+								setMonth(new Date().getMonth());
+							}}
+						>
+							<Text style={{ fontSize: 20 }}>Today</Text>
+						</TouchableOpacity>
+
+						<View style={styles.calendar_header_item}>
+							<TouchableOpacity
+								style={{ padding: 10 }}
+								onPress={() => {
+									if (month === 0) setMonth(11);
+									else setMonth(month - 1);
+								}}
+							>
+								<Icon
+									name="chevron-left"
+									size={18}
+									color="#333"
+								/>
+							</TouchableOpacity>
+							<Text style={styles.calendar_header_text}>
+								{months[month]}
+							</Text>
+							<TouchableOpacity
+								style={{ padding: 10 }}
+								onPress={() => {
+									if (month === 11) setMonth(0);
+									else setMonth(month + 1);
+								}}
+							>
+								<Icon
+									name="chevron-right"
+									size={18}
+									color="#333"
+								/>
+							</TouchableOpacity>
+						</View>
+					</View>
+					<View style={styles.calendar_weekdays}>
+						{renderWeekDays()}
+					</View>
+					<View style={styles.calendar_days}>{renderWeeks()}</View>
 				</View>
-				<TouchableOpacity>
-					<Icon name="chevron-right" size={30} color="#CCC" />
-				</TouchableOpacity>
-			</View>
-		</ScrollView>
+				<View style={styles.notes}>
+					<View style={styles.notes_notes}>
+						<Text style={styles.notes_text}>
+							Riding my bike around the neighborhood.
+						</Text>
+					</View>
+					<View style={[styles.notes_selected_date]}>
+						<Text style={styles.big_text}>{selectedDate}</Text>
+						<Text style={styles.small_text}>
+							{weekdays[selectedDay].toUpperCase()}
+						</Text>
+					</View>
+				</View>
+				<View style={styles.logs}>
+					<View>
+						<Text style={styles.log_text}>Create New Task</Text>
+						<Text style={styles.log_subtext}>
+							On {weekdays[selectedDay]}, {months[month]}{" "}
+							{selectedDate}
+						</Text>
+					</View>
+					<TouchableOpacity style={{ marginLeft: 10 }}>
+						<Icon name="chevron-right" size={30} color="#CCC" />
+					</TouchableOpacity>
+				</View>
+			</ScrollView>
+			<Footer />
+		</View>
 	);
 };
 
@@ -191,11 +290,9 @@ const styles = StyleSheet.create({
 	calendar_header_item: {
 		flex: 1,
 		flexDirection: "row",
-		justifyContent: "space-between",
+		justifyContent: "center",
 		alignItems: "center",
 		paddingTop: 20,
-		paddingRight: 40,
-		paddingLeft: 40,
 	},
 	calendar_header_text: {
 		fontWeight: "bold",

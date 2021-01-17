@@ -18,7 +18,7 @@ export default function App() {
 	return (
 		<NativeRouter>
 			<View style={styles.container}>
-				<Route path="/calendar" component={Calendar} />
+				<Route path="/calendar/:id" component={Calendar} />
 				<Route path="/new-task/:id" component={NewTask} />
 				<Route path="/tasks/:id" component={Tasks} />
 				<Route path="/new-plan/:id" component={NewPlan} />
