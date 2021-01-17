@@ -45,8 +45,14 @@ const NewTask = (props) => {
 		};
 	}, []);
 
-	const showDatePicker = () => setShowDate(true);
-	const showTimePicker = () => setShowTime(true);
+	const showDatePicker = () => {
+		setShowDate(true);
+		setShowTime(false);
+	};
+	const showTimePicker = () => {
+		setShowTime(true);
+		setShowDate(false);
+	};
 
 	const createTask = () => {
 		if (taskName) {
@@ -100,7 +106,6 @@ const NewTask = (props) => {
 						testID="dateTimePicker"
 						value={date}
 						mode="date"
-						is24Hour={true}
 						display="spinner"
 						onChange={handleDateChange}
 					/>
@@ -110,7 +115,6 @@ const NewTask = (props) => {
 						testID="dateTimePicker"
 						value={time}
 						mode="time"
-						is24Hour={true}
 						display="spinner"
 						onChange={handleTimeChange}
 					/>
