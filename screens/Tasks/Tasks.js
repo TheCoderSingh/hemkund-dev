@@ -23,7 +23,7 @@ const Tasks = (props) => {
 	const mountedRef = useRef(true);
 
 	useEffect(() => {
-		setTasks([]);
+		if (mountedRef.current) setTasks([]);
 		let tasksRef = firebase.database().ref("tasks");
 
 		tasksRef
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		alignSelf: "center",
-		marginTop: 120,
+		marginTop: 40,
 		backgroundColor: "#03989E",
 		borderRadius: 6,
 		height: 40,
