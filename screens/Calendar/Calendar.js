@@ -7,6 +7,7 @@ import {
 	TouchableOpacity,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import firebase from "firebase/app";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import { range } from "lodash";
@@ -223,6 +224,59 @@ const Calendar = (props) => {
 		});
 	};
 
+	const renderTasks = () => {
+		let tasksRef = firebase.database().ref("tasks");
+		let tasks = [];
+		let monthnames = [
+			"Jan",
+			"Feb",
+			"Mar",
+			"Apr",
+			"May",
+			"Jun",
+			"Jul",
+			"Aug",
+			"Sep",
+			"Oct",
+			"Nov",
+			"Dec",
+		];
+
+		tasksRef
+			.orderByChild("project_id")
+			.equalTo(props.match.params.id)
+			.on(
+				"value",
+				(snapshot) => {
+					snapshot.forEach((task) => {
+						tasks.push(task.val());
+					});
+				},
+				(error) => {
+					console.log("Error: " + error.code);
+				}
+			);
+
+		return tasks.map((task, index) => {
+			let ind = monthnames.findIndex(() => {
+				(element) => element === task.due_date.split(" ")[1];
+			});
+
+			if (
+				task.due_date.split(" ")[2] == selectedDate &&
+				task.due_date.split(" ")[3] == year &&
+				ind == month - 1
+			) {
+				return (
+					<Text style={styles.notes_text} key={index}>
+						<Text>{task.task_name}</Text>
+						<Text> - Due: {task.due_time.substr(0, 5)}</Text>
+					</Text>
+				);
+			}
+		});
+	};
+
 	return (
 		<View style={{ flex: 1 }}>
 			<ScrollView
@@ -325,9 +379,10 @@ const Calendar = (props) => {
 				</View>
 				<View style={styles.notes}>
 					<View style={styles.notes_notes}>
-						<Text style={styles.notes_text}>
+						{/* <Text style={styles.notes_text}>
 							Riding my bike around the neighborhood.
-						</Text>
+						</Text> */}
+						{renderTasks()}
 					</View>
 					<View style={[styles.notes_selected_date]}>
 						<Text style={styles.big_text}>{selectedDate}</Text>
