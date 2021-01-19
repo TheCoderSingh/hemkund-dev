@@ -41,6 +41,7 @@ const Calendar = (props) => {
 	const [month, setMonth] = useState(new Date().getMonth());
 	const [selectedDate, setSelectedDate] = useState(new Date().getDate());
 	const [selectedDay, setSelectedDay] = useState(new Date().getDay());
+	const [dateChanged, setDateChanged] = useState(false);
 
 	const renderWeekDays = () => {
 		let weekdays = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
@@ -58,6 +59,7 @@ const Calendar = (props) => {
 		var weeks_r = [];
 		var seven_days = [];
 		var count = 0;
+
 		days.forEach((day) => {
 			count += 1;
 			seven_days.push(day);
@@ -67,53 +69,149 @@ const Calendar = (props) => {
 				seven_days = [];
 			}
 		});
+
+		if (count === 1) {
+			weeks_r.push([days[days.length - 1], 0, 0, 0, 0, 0, 0]);
+		} else if (count === 2) {
+			weeks_r.push([
+				days[days.length - 2],
+				days[days.length - 1],
+				0,
+				0,
+				0,
+				0,
+				0,
+			]);
+		} else if (count === 3) {
+			weeks_r.push([
+				days[days.length - 3],
+				days[days.length - 2],
+				days[days.length - 1],
+				0,
+				0,
+				0,
+				0,
+			]);
+		} else if (count === 4) {
+			weeks_r.push([
+				days[days.length - 4],
+				days[days.length - 3],
+				days[days.length - 2],
+				days[days.length - 1],
+				0,
+				0,
+				0,
+			]);
+		} else if (count === 5) {
+			weeks_r.push([
+				days[days.length - 5],
+				days[days.length - 4],
+				days[days.length - 3],
+				days[days.length - 2],
+				days[days.length - 1],
+				0,
+				0,
+			]);
+		} else if (count === 6) {
+			weeks_r.push([
+				days[days.length - 6],
+				days[days.length - 5],
+				days[days.length - 4],
+				days[days.length - 3],
+				days[days.length - 2],
+				days[days.length - 1],
+				0,
+			]);
+		}
+
 		return weeks_r;
 	};
 
 	const renderDays = (week_days) => {
 		return week_days.map((day, index) => {
-			return day === selectedDate ? (
-				<TouchableOpacity
-					label={day}
-					key={index}
-					style={[
-						styles.day,
-						{
-							borderWidth: 2,
-							borderColor: "#03989E",
-							backgroundColor: "#fff",
-						},
-					]}
-					noDefaultStyles={true}
-					onPress={() => {
-						setSelectedDate(day);
-						setSelectedDay(new Date(year, month, day).getDay());
-					}}
-				>
-					<Text style={styles.day_text}>{day}</Text>
-				</TouchableOpacity>
-			) : (
-				<TouchableOpacity
-					label={day}
-					key={index}
-					style={styles.day}
-					noDefaultStyles={true}
-					onPress={() => {
-						setSelectedDate(day);
-						setSelectedDay(new Date(year, month, day).getDay());
-					}}
-				>
-					<Text style={styles.day_text}>{day}</Text>
-				</TouchableOpacity>
-			);
+			if (day !== 0) {
+				return day === selectedDate ? (
+					<TouchableOpacity
+						label={day}
+						key={index}
+						style={[
+							styles.day,
+							{
+								borderWidth: 2,
+								borderColor: "#03989E",
+								backgroundColor: "#fff",
+							},
+						]}
+						noDefaultStyles={true}
+						onPress={() => {
+							setSelectedDate(day);
+							setSelectedDay(new Date(year, month, day).getDay());
+						}}
+					>
+						<Text style={styles.day_text}>{day}</Text>
+					</TouchableOpacity>
+				) : (
+					<TouchableOpacity
+						label={day}
+						key={index}
+						style={styles.day}
+						noDefaultStyles={true}
+						onPress={() => {
+							setSelectedDate(day);
+							setSelectedDay(new Date(year, month, day).getDay());
+						}}
+					>
+						<Text style={styles.day_text}>{day}</Text>
+					</TouchableOpacity>
+				);
+			} else {
+				return (
+					<TouchableOpacity
+						label={day}
+						key={index}
+						style={styles.day}
+						noDefaultStyles={true}
+					/>
+				);
+			}
 		});
 	};
 
 	const renderWeeks = () => {
-		let past_month_days = range(27, 31);
-		let this_month_days = range(1, 30);
+		let past_month_days = [];
 
-		let days = past_month_days.concat(past_month_days, this_month_days);
+		let monthEnd = new Date(year, month + 1, 0).getDate();
+
+		let this_month_days = range(1, monthEnd + 1);
+
+		let startDay = new Date(year, month, 1).getDay();
+
+		switch (startDay) {
+			case 0:
+				break;
+			case 1:
+				past_month_days.push(...new Array(5).fill(0));
+				break;
+			case 2:
+				past_month_days.push(...new Array(2).fill(0));
+				break;
+			case 3:
+				past_month_days.push(...new Array(3).fill(0));
+				break;
+			case 4:
+				past_month_days.push(...new Array(4).fill(0));
+				break;
+			case 5:
+				past_month_days.push(...new Array(5).fill(0));
+				break;
+			case 6:
+				past_month_days.push(...new Array(6).fill(0));
+				break;
+			default:
+				break;
+		}
+
+		let days = past_month_days.concat(this_month_days);
 		let grouped_days = getWeeksArray(days);
 
 		return grouped_days.map((week_days, index) => {
@@ -142,6 +240,7 @@ const Calendar = (props) => {
 							<TouchableOpacity
 								onPress={() => {
 									setYear(year - 1);
+									setDateChanged(true);
 								}}
 								style={{ padding: 10 }}
 							>
@@ -158,6 +257,7 @@ const Calendar = (props) => {
 								style={{ padding: 10 }}
 								onPress={() => {
 									setYear(year + 1);
+									setDateChanged(true);
 								}}
 							>
 								<Icon
@@ -257,31 +357,6 @@ const Calendar = (props) => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-	},
-	header: {
-		backgroundColor: "#03989E",
-		flexDirection: "row",
-		padding: 20,
-		paddingTop: 50,
-	},
-	header_item: {
-		flex: 1,
-	},
-	header_button: {
-		flexDirection: "row",
-	},
-	text_center: {
-		textAlign: "center",
-	},
-	text_right: {
-		textAlign: "right",
-	},
-	header_text: {
-		color: "#fff",
-		fontSize: 20,
-	},
-	bold_text: {
-		fontWeight: "bold",
 	},
 	calendar_header: {
 		flexDirection: "row",
