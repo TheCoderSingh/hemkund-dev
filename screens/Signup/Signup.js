@@ -3,6 +3,8 @@ import {
 	Dimensions,
 	ImageBackground,
 	KeyboardAvoidingView,
+	Platform,
+	ScrollView,
 	StyleSheet,
 	Text,
 	TextInput,
@@ -177,112 +179,238 @@ const Signup = () => {
 	) : (
 		<ImageBackground source={backgroundImage} style={styles.image}>
 			<Header title="Signup" to="/" showBackLink />
-			<KeyboardAvoidingView
-				style={styles.containerInner}
-				behavior="padding"
-			>
-				{errorOccurred ? (
-					<View style={styles.errors}>
-						{usernameInvalid ? (
-							<Text style={[styles.errorText, { fontSize: 16 }]}>
-								Username must be at least 3 characters and must
-								contain only letters, dashes and underscores!
-							</Text>
-						) : null}
-						{usernameInUse ? (
-							<Text style={styles.errorText}>
-								Username already in use!
-							</Text>
-						) : null}
-						{firstNameInvalid ? (
-							<Text style={styles.errorText}>
-								First Name is invalid!
-							</Text>
-						) : null}
-						{lastNameInvalid ? (
-							<Text style={styles.errorText}>
-								Last Name is invalid!
-							</Text>
-						) : null}
-						{emailInvalid ? (
-							<Text style={styles.errorText}>
-								Email is invalid!
-							</Text>
-						) : null}
-						{emailInUse ? (
-							<Text style={styles.errorText}>
-								Email already in use!
-							</Text>
-						) : null}
-						{passwordInvalid ? (
-							<Text style={[styles.errorText, { fontSize: 16 }]}>
-								Password must contain at least 8 characters, a
-								number and both lower and uppercase letters and
-								special characters!
-							</Text>
-						) : null}
-						{passwordsUnmatch ? (
-							<Text style={styles.errorText}>
-								Passwords do not match!
-							</Text>
-						) : null}
-					</View>
-				) : null}
-				<TextInput
-					placeholder="Choose a Username"
-					textContentType="username"
-					autoCompleteType="username"
-					placeholderTextColor="grey"
-					style={styles.input}
-					onChangeText={handleUsername}
-				/>
-				<TextInput
-					placeholder="First Name"
-					textContentType="givenName"
-					autoCompleteType="name"
-					placeholderTextColor="grey"
-					style={styles.input}
-					onChangeText={handleFirstName}
-				/>
-				<TextInput
-					placeholder="Last Name"
-					textContentType="familyName"
-					autoCompleteType="name"
-					placeholderTextColor="grey"
-					style={styles.input}
-					onChangeText={handleLastName}
-				/>
-				<TextInput
-					placeholder="Email"
-					textContentType="emailAddress"
-					autoCompleteType="email"
-					keyboardType="email-address"
-					placeholderTextColor="grey"
-					style={styles.input}
-					onChangeText={handleEmail}
-				/>
-				<TextInput
-					placeholder="Password"
-					secureTextEntry
-					textContentType="password"
-					autoCompleteType="password"
-					placeholderTextColor="grey"
-					style={styles.input}
-					onChangeText={handlePassword}
-				/>
-				<TextInput
-					placeholder="Confirm Password"
-					secureTextEntry
-					textContentType="newPassword"
-					autoCompleteType="password"
-					placeholderTextColor="grey"
-					style={styles.input}
-					onChangeText={handleConfPassword}
-				/>
-				<TouchableOpacity style={styles.button} onPress={validateForm}>
-					<Text style={styles.buttonText}>Sign Up</Text>
-				</TouchableOpacity>
-			</KeyboardAvoidingView>
+			{Platform.OS === "ios" ? (
+				<KeyboardAvoidingView
+					style={styles.containerInner}
+					behavior="padding"
+				>
+					{errorOccurred ? (
+						<View style={styles.errors}>
+							{usernameInvalid ? (
+								<Text
+									style={[styles.errorText, { fontSize: 16 }]}
+								>
+									Username must be at least 3 characters and
+									must contain only letters, dashes and
+									underscores!
+								</Text>
+							) : null}
+							{usernameInUse ? (
+								<Text style={styles.errorText}>
+									Username already in use!
+								</Text>
+							) : null}
+							{firstNameInvalid ? (
+								<Text style={styles.errorText}>
+									First Name is invalid!
+								</Text>
+							) : null}
+							{lastNameInvalid ? (
+								<Text style={styles.errorText}>
+									Last Name is invalid!
+								</Text>
+							) : null}
+							{emailInvalid ? (
+								<Text style={styles.errorText}>
+									Email is invalid!
+								</Text>
+							) : null}
+							{emailInUse ? (
+								<Text style={styles.errorText}>
+									Email already in use!
+								</Text>
+							) : null}
+							{passwordInvalid ? (
+								<Text
+									style={[styles.errorText, { fontSize: 16 }]}
+								>
+									Password must contain at least 8 characters,
+									a number and both lower and uppercase
+									letters and special characters!
+								</Text>
+							) : null}
+							{passwordsUnmatch ? (
+								<Text style={styles.errorText}>
+									Passwords do not match!
+								</Text>
+							) : null}
+						</View>
+					) : null}
+					<TextInput
+						placeholder="Choose a Username"
+						textContentType="username"
+						autoCompleteType="username"
+						placeholderTextColor="grey"
+						style={styles.input}
+						onChangeText={handleUsername}
+					/>
+					<TextInput
+						placeholder="First Name"
+						textContentType="givenName"
+						autoCompleteType="name"
+						placeholderTextColor="grey"
+						style={styles.input}
+						onChangeText={handleFirstName}
+					/>
+					<TextInput
+						placeholder="Last Name"
+						textContentType="familyName"
+						autoCompleteType="name"
+						placeholderTextColor="grey"
+						style={styles.input}
+						onChangeText={handleLastName}
+					/>
+					<TextInput
+						placeholder="Email"
+						textContentType="emailAddress"
+						autoCompleteType="email"
+						keyboardType="email-address"
+						placeholderTextColor="grey"
+						style={styles.input}
+						onChangeText={handleEmail}
+					/>
+					<TextInput
+						placeholder="Password"
+						secureTextEntry
+						textContentType="password"
+						autoCompleteType="password"
+						placeholderTextColor="grey"
+						style={styles.input}
+						onChangeText={handlePassword}
+					/>
+					<TextInput
+						placeholder="Confirm Password"
+						secureTextEntry
+						textContentType="newPassword"
+						autoCompleteType="password"
+						placeholderTextColor="grey"
+						style={styles.input}
+						onChangeText={handleConfPassword}
+					/>
+					<TouchableOpacity
+						style={styles.button}
+						onPress={validateForm}
+					>
+						<Text style={styles.buttonText}>Sign Up</Text>
+					</TouchableOpacity>
+				</KeyboardAvoidingView>
+			) : (
+				<ScrollView
+					style={styles.containerInner}
+					behavior="padding"
+					contentContainerStyle={{ alignItems: "center" }}
+				>
+					{errorOccurred ? (
+						<View style={styles.errors}>
+							{usernameInvalid ? (
+								<Text
+									style={[styles.errorText, { fontSize: 16 }]}
+								>
+									Username must be at least 3 characters and
+									must contain only letters, dashes and
+									underscores!
+								</Text>
+							) : null}
+							{usernameInUse ? (
+								<Text style={styles.errorText}>
+									Username already in use!
+								</Text>
+							) : null}
+							{firstNameInvalid ? (
+								<Text style={styles.errorText}>
+									First Name is invalid!
+								</Text>
+							) : null}
+							{lastNameInvalid ? (
+								<Text style={styles.errorText}>
+									Last Name is invalid!
+								</Text>
+							) : null}
+							{emailInvalid ? (
+								<Text style={styles.errorText}>
+									Email is invalid!
+								</Text>
+							) : null}
+							{emailInUse ? (
+								<Text style={styles.errorText}>
+									Email already in use!
+								</Text>
+							) : null}
+							{passwordInvalid ? (
+								<Text
+									style={[styles.errorText, { fontSize: 16 }]}
+								>
+									Password must contain at least 8 characters,
+									a number and both lower and uppercase
+									letters and special characters!
+								</Text>
+							) : null}
+							{passwordsUnmatch ? (
+								<Text style={styles.errorText}>
+									Passwords do not match!
+								</Text>
+							) : null}
+						</View>
+					) : null}
+					<TextInput
+						placeholder="Choose a Username"
+						textContentType="username"
+						autoCompleteType="username"
+						placeholderTextColor="grey"
+						style={styles.input}
+						onChangeText={handleUsername}
+					/>
+					<TextInput
+						placeholder="First Name"
+						textContentType="givenName"
+						autoCompleteType="name"
+						placeholderTextColor="grey"
+						style={styles.input}
+						onChangeText={handleFirstName}
+					/>
+					<TextInput
+						placeholder="Last Name"
+						textContentType="familyName"
+						autoCompleteType="name"
+						placeholderTextColor="grey"
+						style={styles.input}
+						onChangeText={handleLastName}
+					/>
+					<TextInput
+						placeholder="Email"
+						textContentType="emailAddress"
+						autoCompleteType="email"
+						keyboardType="email-address"
+						placeholderTextColor="grey"
+						style={styles.input}
+						onChangeText={handleEmail}
+					/>
+					<TextInput
+						placeholder="Password"
+						secureTextEntry
+						textContentType="password"
+						autoCompleteType="password"
+						placeholderTextColor="grey"
+						style={styles.input}
+						onChangeText={handlePassword}
+					/>
+					<TextInput
+						placeholder="Confirm Password"
+						secureTextEntry
+						textContentType="newPassword"
+						autoCompleteType="password"
+						placeholderTextColor="grey"
+						style={styles.input}
+						onChangeText={handleConfPassword}
+					/>
+					<TouchableOpacity
+						style={styles.button}
+						onPress={validateForm}
+					>
+						<Text style={styles.buttonText}>Sign Up</Text>
+					</TouchableOpacity>
+				</ScrollView>
+			)}
 		</ImageBackground>
 	);
 };
@@ -296,8 +424,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	containerInner: {
-		marginTop: 120,
-		alignItems: "center",
+		marginTop: Platform.OS === "ios" ? 70 : 20,
 	},
 	input: {
 		height: 50,
@@ -318,9 +445,6 @@ const styles = StyleSheet.create({
 	buttonText: {
 		textAlign: "center",
 		color: "#fff",
-	},
-	extra: {
-		height: 40,
 	},
 	errors: {
 		backgroundColor: "#333",

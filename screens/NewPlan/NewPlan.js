@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
 	Dimensions,
+	Platform,
 	StyleSheet,
 	Text,
 	TextInput,
@@ -149,9 +150,13 @@ const NewPlan = (props) => {
 								let storageRef = firebase.storage().ref();
 								if (response.uri) {
 									setRef(
-										storageRef.child(
-											response.uri.split("/")[14]
-										)
+										Platform.OS === "ios"
+											? storageRef.child(
+													response.uri.split("/")[14]
+											  )
+											: storageRef.child(
+													response.uri.split("/")[11]
+											  )
 									);
 
 									let fetchResponse = await fetch(
@@ -162,6 +167,7 @@ const NewPlan = (props) => {
 									if (mountedRef.current) setBlob(blob);
 									setFileName(response.name);
 									setUploaded(true);
+									// console.log(response.uri.split("/"));
 								}
 							} catch (error) {
 								console.log(error);

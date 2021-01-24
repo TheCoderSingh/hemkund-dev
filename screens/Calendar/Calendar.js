@@ -11,6 +11,7 @@ import firebase from "firebase/app";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import { range } from "lodash";
+import { Link } from "react-router-native";
 
 const months = [
 	"January",
@@ -300,7 +301,7 @@ const Calendar = (props) => {
 							>
 								<Icon
 									name="chevron-left"
-									size={18}
+									size={16}
 									color="#333"
 								/>
 							</TouchableOpacity>
@@ -316,7 +317,7 @@ const Calendar = (props) => {
 							>
 								<Icon
 									name="chevron-right"
-									size={18}
+									size={16}
 									color="#333"
 								/>
 							</TouchableOpacity>
@@ -350,7 +351,7 @@ const Calendar = (props) => {
 							>
 								<Icon
 									name="chevron-left"
-									size={18}
+									size={16}
 									color="#333"
 								/>
 							</TouchableOpacity>
@@ -366,7 +367,7 @@ const Calendar = (props) => {
 							>
 								<Icon
 									name="chevron-right"
-									size={18}
+									size={16}
 									color="#333"
 								/>
 							</TouchableOpacity>
@@ -399,9 +400,12 @@ const Calendar = (props) => {
 							{selectedDate}
 						</Text>
 					</View>
-					<TouchableOpacity style={{ marginLeft: 10 }}>
+					<Link
+						to={"/new-task/" + props.match.params.id}
+						style={{ marginLeft: 10 }}
+					>
 						<Icon name="chevron-right" size={30} color="#CCC" />
-					</TouchableOpacity>
+					</Link>
 				</View>
 			</ScrollView>
 			<Footer />
@@ -426,7 +430,7 @@ const styles = StyleSheet.create({
 	},
 	calendar_header_text: {
 		fontWeight: "bold",
-		fontSize: 20,
+		fontSize: 18,
 	},
 	calendar_weekdays: {
 		flexDirection: "row",
@@ -472,7 +476,7 @@ const styles = StyleSheet.create({
 		flexDirection: "column",
 	},
 	small_text: {
-		fontSize: 15,
+		fontSize: 14,
 	},
 	big_text: {
 		fontSize: 50,

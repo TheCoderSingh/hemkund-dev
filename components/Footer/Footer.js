@@ -1,5 +1,11 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+	Platform,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import MIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Link } from "react-router-native";
@@ -32,7 +38,7 @@ const styles = StyleSheet.create({
 		display: "flex",
 		flexDirection: "row",
 		justifyContent: "space-around",
-		height: 90,
+		height: Platform.OS === "ios" ? 90 : 60,
 		alignItems: "flex-start",
 		paddingTop: 10,
 		width: "100%",

@@ -1,6 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import firebase from "firebase/app";
-import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+	Dimensions,
+	Platform,
+	ScrollView,
+	StyleSheet,
+	Text,
+	View,
+} from "react-native";
 import { Link } from "react-router-native";
 import Header from "../../components/Header/Header";
 import ProjectCard from "../../components/ProjectCard/ProjectCard";
@@ -42,7 +49,7 @@ const Projects = () => {
 			mountedRef.current = false;
 			unsubscribe();
 		};
-	});
+	}, []);
 
 	return (
 		<ScrollView
@@ -80,7 +87,7 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		alignSelf: "center",
-		marginTop: 120,
+		marginTop: 40,
 		backgroundColor: "#03989E",
 		borderRadius: 6,
 		height: 40,

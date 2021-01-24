@@ -115,6 +115,29 @@ const NewTask = (props) => {
 						onChange={handleDateChange}
 					/>
 				)}
+				<View style={styles.dateTimeText}>
+					<Text>Selected Date:</Text>
+					{date.getMonth() < 10 ? (
+						<Text style={styles.dateTime}>
+							{" "}
+							0{date.getMonth() + 1}
+						</Text>
+					) : (
+						<Text style={styles.dateTime}>
+							{" "}
+							{date.getMonth() + 1}
+						</Text>
+					)}
+					{date.getDate() < 10 ? (
+						<Text style={styles.dateTime}>
+							{" "}
+							- 0{date.getDate()}
+						</Text>
+					) : (
+						<Text style={styles.dateTime}> - {date.getDate()}</Text>
+					)}
+					<Text style={styles.dateTime}> - {date.getFullYear()}</Text>
+				</View>
 				<TouchableOpacity
 					onPress={showTimePicker}
 					style={styles.dateTimeCont}
@@ -130,6 +153,24 @@ const NewTask = (props) => {
 						onChange={handleTimeChange}
 					/>
 				)}
+				<View style={styles.dateTimeText}>
+					<Text>Selected Time: </Text>
+					{time.getHours() < 10 ? (
+						<Text style={styles.dateTime}> 0{time.getHours()}</Text>
+					) : (
+						<Text style={styles.dateTime}> {time.getHours()}</Text>
+					)}
+					{time.getMinutes() < 10 ? (
+						<Text style={styles.dateTime}>
+							{" "}
+							:0{time.getMinutes()}
+						</Text>
+					) : (
+						<Text style={styles.dateTime}>
+							:{time.getMinutes()}
+						</Text>
+					)}
+				</View>
 				<TouchableOpacity style={styles.button} onPress={createTask}>
 					<Text style={styles.btnTxt}>Create</Text>
 				</TouchableOpacity>
@@ -203,4 +244,10 @@ const styles = StyleSheet.create({
 		borderRadius: 6,
 		justifyContent: "center",
 	},
+	dateTimeText: {
+		flexDirection: "row",
+		justifyContent: "center",
+		marginTop: 10,
+	},
+	dateTime: {},
 });

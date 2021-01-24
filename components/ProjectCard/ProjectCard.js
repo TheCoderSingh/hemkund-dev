@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
 	Alert,
 	Dimensions,
+	Platform,
 	StyleSheet,
 	Text,
 	TouchableOpacity,
@@ -48,7 +49,7 @@ const ProjectCard = (props) => {
 
 	return projectSelected ? (
 		<Redirect to={"/project/" + props.id + "/" + props.name} />
-	) : (
+	) : removed ? null : (
 		<View style={styles.container}>
 			<TouchableOpacity
 				style={styles.project}
@@ -59,7 +60,12 @@ const ProjectCard = (props) => {
 				<Text style={styles.projectTitle}>{props.name}</Text>
 				<Text style={styles.date}>Created on {props.date}</Text>
 			</TouchableOpacity>
-			<TouchableOpacity onPress={showDeleteAlert} style={styles.iconCont}>
+			<TouchableOpacity
+				onPress={() => {
+					showDeleteAlert(props.id);
+				}}
+				style={styles.iconCont}
+			>
 				<Icon name="trash-alt" size={20} color="#fff" />
 			</TouchableOpacity>
 		</View>
@@ -85,7 +91,7 @@ const styles = StyleSheet.create({
 	},
 	iconCont: {
 		backgroundColor: "#333",
-		height: 75,
+		height: Platform.OS === "ios" ? 76 : 81,
 		justifyContent: "center",
 		alignItems: "center",
 		width: 45,
