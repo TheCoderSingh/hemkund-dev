@@ -95,7 +95,7 @@ const NewPlan = (props) => {
 		<Redirect to={"/project/" + props.match.params.id} />
 	) : (
 		<View style={styles.container}>
-			<Link to={"/project" + props.match.params.id} style={styles.icon}>
+			<Link to={"/project/" + props.match.params.id} style={styles.icon}>
 				<Icon name="cross" size={45} color="#fff" />
 			</Link>
 			<View styles={styles.content}>

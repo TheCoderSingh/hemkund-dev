@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
 	Dimensions,
 	ScrollView,
@@ -19,7 +19,12 @@ const window = Dimensions.get("window");
 const Project = (props) => {
 	const [username, setUsername] = useState();
 	const [usernameInvalid, setUsernameInvalid] = useState(false);
-	const [users, setUsers] = useState([]);
+	const [memberAlreadyAdded, setMemberAlreadyAdded] = useState(false);
+	const [members, setMembers] = useState([]);
+
+	const mountedRef = useRef(true);
+
+	let users = [];
 
 	useEffect(() => {
 		let projectsRef = firebase.database().ref("projects");
@@ -37,13 +42,24 @@ const Project = (props) => {
 							if (key === "users") temp.push(project.val()[key]);
 						});
 
-						setUsers(temp.flat());
+						setMembers(temp.flat());
+						users = temp.flat();
+
+						console.log("Initial...");
+						console.log("Users:");
+						console.log(users);
+						console.log("Members:");
+						console.log(members);
 					});
 				},
 				(error) => {
 					console.log("Error: " + error.code);
 				}
 			);
+
+		return () => {
+			mountedRef.current = false;
+		};
 	}, []);
 
 	const handleUsername = (_username) => setUsername(_username.trim());
@@ -58,7 +74,13 @@ const Project = (props) => {
 				.once("value", (snapshot) => {
 					if (snapshot.exists()) {
 						setUsernameInvalid(false);
-						addUser();
+
+						if (members.includes(username)) {
+							setMemberAlreadyAdded(true);
+						} else {
+							setMemberAlreadyAdded(false);
+							addMember();
+						}
 					} else {
 						setUsernameInvalid(true);
 					}
@@ -66,20 +88,25 @@ const Project = (props) => {
 		} else setUsernameInvalid(true);
 	};
 
-	const addUser = () => {
-		setUsers((users) => [...users, username]);
+	const addMember = () => {
+		users.push(username);
+		if (mountedRef.current) setMembers(users);
 
-		let projectsRef = firebase.database().ref("projects");
+		console.log("In add member...");
+		console.log("Users:");
+		console.log(users);
+		console.log("Members:");
+		console.log(members);
 
-		projectsRef
+		let projectsRef = firebase
+			.database()
+			.ref("projects")
 			.child(props.match.params.id)
-			.update({ users: users })
-			.then(() => {
-				console.log("User added");
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+			.child("members");
+
+		for (i = 0; i < members.length; i++) {
+			projectsRef.push(members[i]);
+		}
 	};
 
 	return (
@@ -89,7 +116,10 @@ const Project = (props) => {
 				to="/projects"
 				title={props.match.params.name}
 			/>
-			<ScrollView style={styles.container}>
+			<ScrollView
+				style={styles.container}
+				keyboardShouldPersistTaps={"handled"}
+			>
 				<Link
 					to={"/new-plan/" + props.match.params.id}
 					style={styles.newPlanBtn}
@@ -100,6 +130,13 @@ const Project = (props) => {
 					<View style={styles.errors}>
 						<Text style={[styles.errorText, { fontSize: 16 }]}>
 							Username is invalid!
+						</Text>
+					</View>
+				) : null}
+				{memberAlreadyAdded ? (
+					<View style={styles.errors}>
+						<Text style={[styles.errorText, { fontSize: 16 }]}>
+							Username already exists!
 						</Text>
 					</View>
 				) : null}
@@ -118,6 +155,16 @@ const Project = (props) => {
 					>
 						<Text style={styles.addUserTxt}>Add</Text>
 					</TouchableOpacity>
+				</View>
+				<View style={styles.members}>
+					<Text style={{ textAlign: "center" }}>
+						Project Members:
+					</Text>
+					<View style={styles.memberList}>
+						{users.map((user) => {
+							return <Text style={styles.member}>{user}</Text>;
+						})}
+					</View>
 				</View>
 				<View style={styles.plans}>
 					<Plans projectid={props.match.params.id} />
@@ -189,5 +236,19 @@ const styles = StyleSheet.create({
 	},
 	plans: {
 		alignItems: "center",
+	},
+	members: {
+		alignSelf: "center",
+		marginTop: 10,
+	},
+	memberList: {
+		flexDirection: "row",
+		marginTop: 5,
+	},
+	member: {
+		marginRight: 3,
+		backgroundColor: "#03989E",
+		padding: 7,
+		color: "#fff",
 	},
 });
