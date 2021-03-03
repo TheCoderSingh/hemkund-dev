@@ -8,6 +8,7 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
+import { Link } from "react-router-native";
 
 const window = Dimensions.get("window");
 
@@ -41,21 +42,28 @@ const Plans = (props) => {
 	}, []);
 
 	return plans.map((plan) => {
-		return plan.file_url ? (
-			<TouchableOpacity
+		// return plan.file_url ? (
+		return (
+			<Link
+				to={
+					"/plan/" +
+					props.projectid +
+					"/" +
+					plan.plan_id +
+					"/" +
+					plan.plan_name
+				}
 				style={styles.container}
 				key={plan.plan_id}
-				onPress={() => {
-					WebBrowser.openBrowserAsync(plan.file_url);
-				}}
 			>
 				<Text style={styles.planText}>{plan.plan_name}</Text>
-			</TouchableOpacity>
-		) : (
-			<View style={styles.container} key={plan.plan_id}>
-				<Text style={styles.planText}>{plan.plan_name}</Text>
-			</View>
+			</Link>
 		);
+		// ) : (
+		// 	<View style={styles.container} key={plan.plan_id}>
+		// 		<Text style={styles.planText}>{plan.plan_name}</Text>
+		// 	</View>
+		// );
 	});
 };
 
