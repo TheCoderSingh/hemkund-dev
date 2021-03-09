@@ -39,17 +39,18 @@ const Project = (props) => {
 
 					data.forEach((project) => {
 						Object.keys(project.val()).map((key) => {
-							if (key === "users") temp.push(project.val()[key]);
+							if (key === "members") {
+								temp.push(project.val()[key]);
+							}
 						});
 
-						setMembers(temp.flat());
-						users = temp.flat();
+						Object.keys(temp).map((key) => {
+							Object.values(temp[key]).map((user) => {
+								users.push(user);
+							});
+						});
 
-						console.log("Initial...");
-						console.log("Users:");
-						console.log(users);
-						console.log("Members:");
-						console.log(members);
+						setMembers(users);
 					});
 				},
 				(error) => {
@@ -91,12 +92,6 @@ const Project = (props) => {
 	const addMember = () => {
 		users.push(username);
 		if (mountedRef.current) setMembers(users);
-
-		console.log("In add member...");
-		console.log("Users:");
-		console.log(users);
-		console.log("Members:");
-		console.log(members);
 
 		let projectsRef = firebase
 			.database()
@@ -161,8 +156,12 @@ const Project = (props) => {
 						Project Members:
 					</Text>
 					<View style={styles.memberList}>
-						{users.map((user) => {
-							return <Text style={styles.member}>{user}</Text>;
+						{members.map((user, index) => {
+							return (
+								<Text key={index} style={styles.member}>
+									{user}
+								</Text>
+							);
 						})}
 					</View>
 				</View>
@@ -244,11 +243,10 @@ const styles = StyleSheet.create({
 	memberList: {
 		flexDirection: "row",
 		marginTop: 5,
+		width: 350,
+		alignSelf: "center",
 	},
 	member: {
-		marginRight: 3,
-		backgroundColor: "#03989E",
-		padding: 7,
-		color: "#fff",
+		padding: 3,
 	},
 });
