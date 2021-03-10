@@ -167,7 +167,6 @@ const NewPlan = (props) => {
 									if (mountedRef.current) setBlob(blob);
 									setFileName(response.name);
 									setUploaded(true);
-									// console.log(response.uri.split("/"));
 								}
 							} catch (error) {
 								console.log(error);

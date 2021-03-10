@@ -16,12 +16,24 @@
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
 			"supportsTablet": true,
-			"bundleIdentifier": "com.jaskaran.hemkunddev"
+			"bundleIdentifier": "com.jaskaran.hemkunddev",
+			"usesICloudStorage": true
 		},
 		"android": {
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/adaptive-icon.png",
-				"backgroundColor": "#FFFFFF"
+				"backgroundColor": "#FFFFFF",
+				"permissions": [
+					"READ_PHONE_STATE",
+					"READ_EXTERNAL_STORAGE",
+					"READ_INTERNAL_STORAGE",
+					"WRITE_EXTERNAL_STORAGE",
+					"CAMERA",
+					"RECORD_AUDIO",
+					"AUDIO_RECORDING",
+					"VIBRATE",
+					"WAKE_LOCK"
+				]
 			},
 			"package": "com.jaskaran.hemkunddev"
 		},
