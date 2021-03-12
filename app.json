@@ -17,25 +17,25 @@
 		"ios": {
 			"supportsTablet": true,
 			"bundleIdentifier": "com.jaskaran.hemkunddev",
-			"usesICloudStorage": true
+			"usesIcloudStorage": true
 		},
 		"android": {
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#FFFFFF",
-				"permissions": [
-					"READ_PHONE_STATE",
-					"READ_EXTERNAL_STORAGE",
-					"READ_INTERNAL_STORAGE",
-					"WRITE_EXTERNAL_STORAGE",
-					"CAMERA",
-					"RECORD_AUDIO",
-					"AUDIO_RECORDING",
-					"VIBRATE",
-					"WAKE_LOCK"
-				]
 			},
-			"package": "com.jaskaran.hemkunddev"
+			"package": "com.jaskaran.hemkunddev",
+			"permissions": [
+				"READ_PHONE_STATE",
+				"READ_EXTERNAL_STORAGE",
+				"READ_INTERNAL_STORAGE",
+				"WRITE_EXTERNAL_STORAGE",
+				"CAMERA",
+				"RECORD_AUDIO",
+				"AUDIO_RECORDING",
+				"VIBRATE",
+				"WAKE_LOCK"
+			]
 		},
 		"web": {
 			"favicon": "./assets/favicon.png"

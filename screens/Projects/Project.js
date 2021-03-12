@@ -22,6 +22,8 @@ const Project = (props) => {
 	const [memberAlreadyAdded, setMemberAlreadyAdded] = useState(false);
 	const [members, setMembers] = useState([]);
 
+	const usersRef = useRef([]);
+
 	const mountedRef = useRef(true);
 
 	let users = [];
@@ -47,10 +49,12 @@ const Project = (props) => {
 						Object.keys(temp).map((key) => {
 							Object.values(temp[key]).map((user) => {
 								users.push(user);
+								usersRef.current.push(user);
 							});
 						});
 
-						setMembers(users);
+						// setMembers(users);
+						setMembers(usersRef.current);
 					});
 				},
 				(error) => {
@@ -91,7 +95,11 @@ const Project = (props) => {
 
 	const addMember = () => {
 		users.push(username);
-		if (mountedRef.current) setMembers(users);
+		usersRef.current.push(username);
+		// setMembers(users);
+		setMembers(usersRef.current);
+
+		console.log(usersRef.current);
 
 		let projectsRef = firebase
 			.database()
@@ -99,9 +107,13 @@ const Project = (props) => {
 			.child(props.match.params.id)
 			.child("members");
 
-		for (i = 0; i < members.length; i++) {
-			projectsRef.push(members[i]);
-		}
+		// for (i = 0; i < members.length; i++) {
+		// 	projectsRef.push(members[i]);
+		// }
+		// for (i = 0; i < usersRef.current.length; i++) {
+		// 	projectsRef.push(usersRef.current[i]);
+		// }
+		projectsRef.set(usersRef.current);
 	};
 
 	return (

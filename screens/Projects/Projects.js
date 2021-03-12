@@ -42,6 +42,25 @@ const Projects = () => {
 							console.log("Error: " + error.code);
 						}
 					);
+
+				projectsRef
+					.orderByChild("members")
+					.equalTo(user.username)
+					.on(
+						"value",
+						(snapshot) => {
+							snapshot.forEach((project) => {
+								if (mountedRef.current)
+									setProjects((projects) => [
+										...projects,
+										project.val(),
+									]);
+							});
+						},
+						(error) => {
+							console.log("Error: " + error.code);
+						}
+					);
 			}
 		});
 
