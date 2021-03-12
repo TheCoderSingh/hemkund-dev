@@ -99,8 +99,6 @@ const Project = (props) => {
 		// setMembers(users);
 		setMembers(usersRef.current);
 
-		console.log(usersRef.current);
-
 		let projectsRef = firebase
 			.database()
 			.ref("projects")

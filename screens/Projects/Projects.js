@@ -43,24 +43,46 @@ const Projects = () => {
 						}
 					);
 
-				projectsRef
-					.orderByChild("members")
-					.equalTo(user.username)
-					.on(
-						"value",
-						(snapshot) => {
-							snapshot.forEach((project) => {
-								if (mountedRef.current)
-									setProjects((projects) => [
-										...projects,
-										project.val(),
-									]);
+				// projectsRef.child("members").once("value", (snapshot) => {
+				// 	snapshot.forEach((project) => {
+				// 		console.log(project.val());
+				// 	});
+				// });
+
+				let userRef = firebase
+					.database()
+					.ref("users")
+					.orderByChild("uid")
+					.equalTo(user.uid);
+
+				projectsRef.on("value", (snapshot) => {
+					snapshot.forEach((project) => {
+						// console.log(project);
+						// if (
+						// 	Object.keys(project.val()).includes(
+						// 		"members"
+						// 	)
+						// )
+						// 	console.log(index);
+						if ("members" in project.val()) {
+							userRef.on("value", (snapshot) => {
+								snapshot.forEach((user) => {
+									if (
+										project
+											.val()
+											["members"].includes(
+												user.val()["username"]
+											)
+									)
+										setProjects((projects) => [
+											...projects,
+											project.val(),
+										]);
+								});
 							});
-						},
-						(error) => {
-							console.log("Error: " + error.code);
 						}
-					);
+					});
+				});
 			}
 		});
 
