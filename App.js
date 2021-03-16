@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { NativeRouter, Route } from "react-router-native";
 import Logout from "./components/Logout/Logout";
@@ -14,8 +14,19 @@ import Projects from "./screens/Projects/Projects";
 import Signup from "./screens/Signup/Signup";
 import Tasks from "./screens/Tasks/Tasks";
 import "./utils/firebaseConfig";
+import * as Permissions from "expo-permissions";
 
 export default function App() {
+	useEffect(() => {
+		getPermissionsAsync();
+	}, []);
+
+	const getPermissionsAsync = async () => {
+		const { status } = await Permissions.askAsync(
+			Permissions.MEDIA_LIBRARY
+		);
+	};
+
 	return (
 		<NativeRouter>
 			<View style={styles.container}>
