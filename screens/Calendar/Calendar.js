@@ -408,7 +408,7 @@ const Calendar = (props) => {
 					</Link>
 				</View>
 			</ScrollView>
-			<Footer />
+			<Footer projectid={props.match.params.id} />
 		</View>
 	);
 };
