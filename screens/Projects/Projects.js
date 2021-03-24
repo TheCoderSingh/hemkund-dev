@@ -43,12 +43,6 @@ const Projects = () => {
 						}
 					);
 
-				// projectsRef.child("members").once("value", (snapshot) => {
-				// 	snapshot.forEach((project) => {
-				// 		console.log(project.val());
-				// 	});
-				// });
-
 				let userRef = firebase
 					.database()
 					.ref("users")
@@ -57,13 +51,6 @@ const Projects = () => {
 
 				projectsRef.on("value", (snapshot) => {
 					snapshot.forEach((project) => {
-						// console.log(project);
-						// if (
-						// 	Object.keys(project.val()).includes(
-						// 		"members"
-						// 	)
-						// )
-						// 	console.log(index);
 						if ("members" in project.val()) {
 							userRef.on("value", (snapshot) => {
 								snapshot.forEach((user) => {

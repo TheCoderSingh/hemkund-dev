@@ -53,7 +53,6 @@ const Project = (props) => {
 							});
 						});
 
-						// setMembers(users);
 						setMembers(usersRef.current);
 					});
 				},
@@ -96,7 +95,6 @@ const Project = (props) => {
 	const addMember = () => {
 		users.push(username);
 		usersRef.current.push(username);
-		// setMembers(users);
 		setMembers(usersRef.current);
 
 		let projectsRef = firebase
@@ -105,12 +103,6 @@ const Project = (props) => {
 			.child(props.match.params.id)
 			.child("members");
 
-		// for (i = 0; i < members.length; i++) {
-		// 	projectsRef.push(members[i]);
-		// }
-		// for (i = 0; i < usersRef.current.length; i++) {
-		// 	projectsRef.push(usersRef.current[i]);
-		// }
 		projectsRef.set(usersRef.current);
 	};
 
@@ -208,7 +200,6 @@ const styles = StyleSheet.create({
 	input: {
 		height: 50,
 		width: window.width - 110,
-		// backgroundColor: "#03989E",
 		marginVertical: 5,
 		paddingLeft: 20,
 		alignSelf: "center",

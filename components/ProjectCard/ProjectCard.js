@@ -98,6 +98,6 @@ const styles = StyleSheet.create({
 	},
 	date: {
 		paddingVertical: 10,
-		color: "#ccc",
+		color: "#FFF",
 	},
 });
